@@ -1,0 +1,53 @@
+.page-container {
+    padding: 16px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .back-button {
+    margin-bottom: 16px;
+  }
+  
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    padding: 50px;
+  }
+  
+  .divider {
+    margin: 20px 0;
+  }
+  
+  .postagem-info {
+    background-color: #f9f9f9;
+    padding: 16px;
+    border-radius: 4px;
+    margin-top: 16px;
+    
+    h3 {
+      margin-top: 0;
+    }
+  }
+  
+  .meta-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    color: #666;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+  }
+  
+  .preview-content {
+    max-height: 200px;
+    overflow-y: auto;
+    border-left: 3px solid #ccc;
+    padding-left: 16px;
+    color: #555;
+  }
+  
+  mat-card-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
