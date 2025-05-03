@@ -1,4 +1,103 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+@include mat.core();
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+$primary-palette: mat.$indigo-palette;
+$accent-palette: mat.$pink-palette;
+$warn-palette: mat.$red-palette;
+
+$blog-primary: mat.define-palette($primary-palette);
+$blog-accent: mat.define-palette($accent-palette, A200, A100, A400);
+$blog-warn: mat.define-palette($warn-palette);
+
+$blog-theme: mat.define-light-theme((
+  color: (
+    primary: $blog-primary,
+    accent: $blog-accent,
+    warn: $blog-warn,
+  ),
+  typography: mat.define-typography-config(),
+  density: 0,
+));
+
+@include mat.all-component-themes($blog-theme);
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.page-container {
+  padding: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+
+.mat-mdc-table {
+  width: 100%;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.mat-mdc-header-cell, .mat-mdc-cell {
+  padding: 8px 16px !important;
+}
+
+.mat-mdc-header-row {
+  background-color: #f5f5f5;
+}
+
+.mat-mdc-row:hover {
+  background-color: #f9f9f9;
+}
+
+.mat-mdc-card {
+  margin-bottom: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mat-mdc-card-title {
+  margin-bottom: 12px;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.mat-mdc-card-content {
+  padding: 16px;
+}
+
+.mat-mdc-snack-bar-container {
+  margin: 16px;
+}
+
+@media screen and (max-width: 599px) {
+  .page-container {
+    padding: 8px;
+  }
+  
+  .mat-mdc-header-cell, .mat-mdc-cell {
+    padding: 8px !important;
+  }
+}
