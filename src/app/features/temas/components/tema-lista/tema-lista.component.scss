@@ -1,0 +1,32 @@
+.page-container {
+    padding: 16px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  
+  .table-responsive {
+    overflow-x: auto;
+  }
+  
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .no-records {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+  }
+  
+  table {
+    width: 100%;
+  }
