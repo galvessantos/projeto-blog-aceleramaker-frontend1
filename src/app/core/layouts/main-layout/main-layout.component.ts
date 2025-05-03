@@ -1,10 +1,15 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { HeaderComponent } from '../../../shared/components/header/header.component';
-import { SidenavComponent } from '../../../shared/components/sidenav/sidenav.component';
-import { FooterComponent } from '../../../shared/components/footer/footer.component';
+import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
+
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -14,16 +19,28 @@ import { FooterComponent } from '../../../shared/components/footer/footer.compon
   imports: [
     CommonModule,
     RouterModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
     MatSidenavModule,
-    HeaderComponent,
-    SidenavComponent,
-    FooterComponent
+    MatListModule,
+    MatMenuModule,
+    MatDividerModule
   ]
 })
 export class MainLayoutComponent {
-  sidenavOpened = true;
-
-  toggleSidenav(): void {
-    this.sidenavOpened = !this.sidenavOpened;
+  menuItems = [
+    { label: 'Postagens', icon: 'article', route: '/postagens' },
+    { label: 'Temas', icon: 'bookmark', route: '/temas' }
+  ];
+  
+  constructor(private authService: AuthService) {}
+  
+  get userName(): string {
+    return this.authService.getCurrentUser()?.nome || 'Usuário';
+  }
+  
+  logout(): void {
+    this.authService.logout();
   }
 }

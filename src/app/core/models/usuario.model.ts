@@ -1,22 +1,25 @@
 export interface Usuario {
-    id?: number;
-    nome: string;
-    username: string;
-    email?: string;
-    foto?: string;
-    creationTimestamp?: Date;
-  }
-  
-  export interface CreateUsuario {
-    nome: string;
-    username: string;
-    email: string;
-    senha: string;
-  }
-  
-  export interface UpdateUsuario {
-    nome: string;
-    username: string;
-    senha: string;
-    foto?: string;
-  }
+  id: number;
+  nome: string;
+  username: string;
+  email: string;
+  foto?: string;
+}
+
+export interface LoginRequest {
+  login: string;
+  senha: string;
+}
+
+export interface RegisterRequest {
+  nome: string;
+  username: string;
+  email: string;
+  senha: string;
+}
+
+export interface AuthResponse {
+  token: string;
+  tipo: string;
+  usuario: Usuario;
+}
