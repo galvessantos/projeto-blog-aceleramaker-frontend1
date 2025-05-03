@@ -17,6 +17,10 @@ export const routes: Routes = [
       {
         path: 'temas',
         loadChildren: () => import('./features/temas/temas.routes').then(r => r.TEMAS_ROUTES)
+      },
+      {
+        path: 'perfil',
+        loadComponent: () => import('./features/perfil/perfil.component').then(c => c.PerfilComponent)
       }
     ]
   },

@@ -1,30 +1,37 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Usuario, UpdateUsuario } from '../models/usuario.model';
 import { environment } from '../../../environments/environment';
+import { Usuario } from '../models/usuario.model';
+
+export interface AtualizarPerfilRequest {
+  nome: string;
+  username: string;
+  email: string;
+}
+
+export interface AlterarSenhaRequest {
+  senhaAtual: string;
+  novaSenha: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
-  private apiUrl = `${environment.apiUrl}/v1/usuarios`;
-
-  constructor(private http: HttpClient) { }
-
-  getUsuarioById(id: number): Observable<Usuario> {
-    return this.http.get<Usuario>(`${this.apiUrl}/${id}`);
+  private apiUrl = `${environment.apiUrl}/usuarios`;
+  
+  constructor(private http: HttpClient) {}
+  
+  getPerfilUsuario(): Observable<Usuario> {
+    return this.http.get<Usuario>(`${this.apiUrl}/perfil`);
   }
-
-  updateUsuario(id: number, usuario: UpdateUsuario): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${id}`, usuario);
+  
+  atualizarPerfil(perfilData: AtualizarPerfilRequest): Observable<Usuario> {
+    return this.http.put<Usuario>(`${this.apiUrl}/atualizar`, perfilData);
   }
-
-  deleteUsuario(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
-  }
-
-  getAllUsuarios(): Observable<Usuario[]> {
-    return this.http.get<Usuario[]>(this.apiUrl);
+  
+  alterarSenha(senhaData: AlterarSenhaRequest): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/alterar-senha`, senhaData);
   }
 }
