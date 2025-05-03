@@ -1,26 +1,64 @@
-import { HttpEvent, HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Injectable, inject } from '@angular/core';
+import {
+  HttpRequest,
+  HttpHandler,
+  HttpEvent,
+  HttpInterceptor,
+  HttpErrorResponse,
+  HttpInterceptorFn
+} from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-export const authInterceptor: HttpInterceptorFn = (request, next): Observable<HttpEvent<unknown>> => {
+@Injectable()
+export class AuthInterceptor implements HttpInterceptor {
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    const token = this.authService.getToken();
+    
+    if (token) {
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    }
+    
+    return next.handle(request).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401 || error.status === 403) {
+          this.authService.logout();
+          this.router.navigate(['/login']);
+        }
+        return throwError(() => error);
+      })
+    );
+  }
+}
+
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const router = inject(Router);
+  
   const token = authService.getToken();
   
-  if (token && !request.url.includes('auth/login') && !request.url.includes('auth/register')) {
-    request = request.clone({
+  if (token) {
+    req = req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`
       }
     });
   }
   
-  return next(request).pipe(
+  return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
+      if (error.status === 401 || error.status === 403) {
         authService.logout();
         router.navigate(['/login']);
       }
