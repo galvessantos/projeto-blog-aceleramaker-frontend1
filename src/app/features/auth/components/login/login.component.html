@@ -1,42 +1,42 @@
 <div class="login-container">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Entrar no Blog Pessoal</mat-card-title>
-      </mat-card-header>
-      
-      <mat-card-content>
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Usuário ou Email</mat-label>
-            <input matInput formControlName="login" required>
-            <mat-error *ngIf="loginForm.get('login')?.hasError('required')">
-              Usuário ou Email é obrigatório
-            </mat-error>
-          </mat-form-field>
-          
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Senha</mat-label>
-            <input matInput formControlName="senha" [type]="hidePassword ? 'password' : 'text'" required>
-            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
-              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-            </button>
-            <mat-error *ngIf="loginForm.get('senha')?.hasError('required')">
-              Senha é obrigatória
-            </mat-error>
-            <mat-error *ngIf="loginForm.get('senha')?.hasError('minlength')">
-              A senha deve ter pelo menos 6 caracteres
-            </mat-error>
-          </mat-form-field>
-          
-          <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid || loading" class="full-width">
-            <mat-spinner diameter="20" *ngIf="loading" style="display: inline-block;"></mat-spinner>
-            Entrar
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Entrar no Blog Pessoal</mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Usuário ou Email</mat-label>
+          <input matInput formControlName="login" required>
+          <mat-error *ngIf="loginForm.get('login')?.hasError('required')">
+            Usuário ou Email é obrigatório
+          </mat-error>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Senha</mat-label>
+          <input matInput formControlName="senha" [type]="hidePassword ? 'password' : 'text'" required>
+          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
-        </form>
-      </mat-card-content>
-      
-      <mat-card-actions>
-        <p>Não tem uma conta? <a routerLink="/register">Cadastre-se</a></p>
-      </mat-card-actions>
-    </mat-card>
-  </div>
+          <mat-error *ngIf="loginForm.get('senha')?.hasError('required')">
+            Senha é obrigatória
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('senha')?.hasError('minlength')">
+            A senha deve ter pelo menos 6 caracteres
+          </mat-error>
+        </mat-form-field>
+        
+        <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid || loading" class="full-width">
+          <mat-spinner diameter="20" *ngIf="loading" style="display: inline-block;"></mat-spinner>
+          Entrar
+        </button>
+      </form>
+    </mat-card-content>
+    
+    <mat-card-actions>
+      <p>Não tem uma conta? <a routerLink="/register">Cadastre-se</a></p>
+    </mat-card-actions>
+  </mat-card>
+</div>

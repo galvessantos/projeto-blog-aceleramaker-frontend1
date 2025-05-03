@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../../../core/services/auth.service';
+import { RouterModule, Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -33,7 +33,7 @@ export class RegisterComponent {
   registerForm: FormGroup;
   loading = false;
   hidePassword = true;
-  
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -47,7 +47,7 @@ export class RegisterComponent {
       senha: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
-  
+
   onSubmit(): void {
     if (this.registerForm.valid) {
       this.loading = true;
@@ -62,7 +62,7 @@ export class RegisterComponent {
         },
         error: (error) => {
           this.loading = false;
-          this.snackBar.open(error.error.message || 'Erro ao realizar o registro. Tente novamente.', 'Fechar', {
+          this.snackBar.open(error.error?.message || 'Erro ao realizar o registro. Tente novamente.', 'Fechar', {
             duration: 5000
           });
         }
