@@ -1,42 +1,68 @@
-<div class="login-container">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>Entrar no Blog Pessoal</mat-card-title>
-    </mat-card-header>
-    
-    <mat-card-content>
+<div class="auth-container">
+  <div class="auth-content">
+    <div class="form-side">
+      <div class="logo">
+        <img src="assets/images/twinterior-logo.svg" alt="Twinterior Logo">
+      </div>
+      <div class="auth-header">
+        <h1>Bem-vindo de volta</h1>
+        <p>Entre na sua conta para continuar</p>
+      </div>
+
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Usuário ou Email</mat-label>
-          <input matInput formControlName="login" required>
-          <mat-error *ngIf="loginForm.get('login')?.hasError('required')">
-            Usuário ou Email é obrigatório
-          </mat-error>
-        </mat-form-field>
+        <div class="form-group">
+          <div class="input-container">
+            <span class="input-icon">
+              <i class="material-icons">person</i>
+            </span>
+            <input 
+              type="text" 
+              formControlName="login"
+              class="auth-input"
+              placeholder="Usuário ou Email"
+            >
+          </div>
+        </div>
         
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Senha</mat-label>
-          <input matInput formControlName="senha" [type]="hidePassword ? 'password' : 'text'" required>
-          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
-            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        <div class="form-group">
+          <div class="input-container">
+            <span class="input-icon">
+              <i class="material-icons">lock</i>
+            </span>
+            <input 
+              [type]="hidePassword ? 'password' : 'text'" 
+              formControlName="senha"
+              class="auth-input"
+              placeholder="Senha"
+            >
+            <button type="button" class="toggle-password" (click)="hidePassword = !hidePassword">
+              <i class="material-icons">{{hidePassword ? 'visibility_off' : 'visibility'}}</i>
+            </button>
+          </div>
+        </div>
+        
+        <div class="auth-actions">
+          <button type="submit" class="auth-button" [disabled]="loginForm.invalid || loading">
+            <span *ngIf="!loading">Entrar</span>
+            <span *ngIf="loading" class="spinner"></span>
           </button>
-          <mat-error *ngIf="loginForm.get('senha')?.hasError('required')">
-            Senha é obrigatória
-          </mat-error>
-          <mat-error *ngIf="loginForm.get('senha')?.hasError('minlength')">
-            A senha deve ter pelo menos 6 caracteres
-          </mat-error>
-        </mat-form-field>
-        
-        <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid || loading" class="full-width">
-          <mat-spinner diameter="20" *ngIf="loading" style="display: inline-block;"></mat-spinner>
-          Entrar
-        </button>
+        </div>
       </form>
-    </mat-card-content>
-    
-    <mat-card-actions>
-      <p>Não tem uma conta? <a routerLink="/register">Cadastre-se</a></p>
-    </mat-card-actions>
-  </mat-card>
+      
+      <div class="auth-footer">
+        <span>Não tem uma conta?</span>
+        <a routerLink="/register" class="auth-link">Cadastre-se</a>
+      </div>
+    </div>
+
+    <div class="image-side">
+      <img src="assets/images/imagem-auth.jpg" alt="Ilustração de autenticação" class="auth-image">
+      <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+      </div>
+    </div>
+  </div>
 </div>

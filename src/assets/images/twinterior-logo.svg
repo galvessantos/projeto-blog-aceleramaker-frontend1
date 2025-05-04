@@ -1,0 +1,6 @@
+<svg viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg">
+  <text x="50" y="70" font-family="Arial, sans-serif" font-size="55" font-weight="bold" fill="#6a11cb">Twinterior</text>
+  <circle cx="330" cy="45" r="12" fill="#9142e6" opacity="0.6" />
+  <circle cx="350" cy="65" r="18" fill="#6a11cb" opacity="0.4" />
+  <path d="M315 75 Q 330 85 345 75" fill="none" stroke="#6a11cb" stroke-width="3" stroke-linecap="round" />
+</svg>
