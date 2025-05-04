@@ -41,6 +41,7 @@ export class PerfilComponent implements OnInit {
   submitting = false;
   changingPassword = false;
   usuario: Usuario | null = null;
+  showSenhaForm = false;
 
   constructor(
     private fb: FormBuilder,
@@ -50,8 +51,8 @@ export class PerfilComponent implements OnInit {
   ) {
     this.perfilForm = this.fb.group({
       nome: ['', [Validators.required, Validators.maxLength(100)]],
-      email: [{value: '', disabled: true}],
-      username: [{value: '', disabled: true}]
+      email: [{ value: '', disabled: true }],
+      username: [{ value: '', disabled: true }]
     });
 
     this.senhaForm = this.fb.group({
@@ -64,7 +65,7 @@ export class PerfilComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
     this.usuario = this.authService.getCurrentUser();
-    
+
     if (this.usuario) {
       this.perfilForm.patchValue({
         nome: this.usuario.nome,
@@ -93,20 +94,27 @@ export class PerfilComponent implements OnInit {
     }
   }
 
+  toggleSenhaForm(): void {
+    this.showSenhaForm = !this.showSenhaForm;
+    if (!this.showSenhaForm) {
+      this.senhaForm.reset();
+    }
+  }
+
   onSubmitPerfil(): void {
     if (this.perfilForm.valid) {
       this.submitting = true;
-      
+
       const perfilData = {
         nome: this.perfilForm.getRawValue().nome,
-        username: this.usuario?.username || '',
-        email: this.usuario?.email || ''
+        senha: '',
+        foto: this.usuario?.foto || ''
       };
-      
+
       this.usuarioService.atualizarPerfil(perfilData).subscribe({
         next: (usuario) => {
           this.usuario = usuario;
-          
+
           if (usuario) {
             const currentUser = this.authService.getCurrentUser();
             if (currentUser) {
@@ -115,7 +123,7 @@ export class PerfilComponent implements OnInit {
               this.authService.updateCurrentUser(updatedUser);
             }
           }
-          
+
           this.snackBar.open('Perfil atualizado com sucesso!', 'Fechar', {
             duration: 3000
           });
@@ -138,7 +146,7 @@ export class PerfilComponent implements OnInit {
         senhaAtual: this.senhaForm.value.senhaAtual,
         novaSenha: this.senhaForm.value.novaSenha
       };
-      
+
       this.usuarioService.alterarSenha(senhaData).subscribe({
         next: () => {
           this.snackBar.open('Senha alterada com sucesso!', 'Fechar', {
@@ -146,6 +154,7 @@ export class PerfilComponent implements OnInit {
           });
           this.senhaForm.reset();
           this.changingPassword = false;
+          this.showSenhaForm = false;
         },
         error: (error) => {
           this.snackBar.open('Erro ao alterar senha: ' + error.message, 'Fechar', {
@@ -160,12 +169,12 @@ export class PerfilComponent implements OnInit {
   checkSenhas(group: FormGroup): { [key: string]: boolean } | null {
     const novaSenha = group.get('novaSenha')?.value;
     const confirmacaoSenha = group.get('confirmacaoSenha')?.value;
-    
+
     if (novaSenha && confirmacaoSenha && novaSenha !== confirmacaoSenha) {
       group.get('confirmacaoSenha')?.setErrors({ notMatch: true });
       return { notMatch: true };
     }
-    
+
     return null;
   }
 }

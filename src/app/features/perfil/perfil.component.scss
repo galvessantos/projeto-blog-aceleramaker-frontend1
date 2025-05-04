@@ -1,32 +1,48 @@
 .page-container {
-    padding: 16px;
-    max-width: 800px;
-    margin: 0 auto;
-  }
-  
-  .loading-container {
-    display: flex;
-    justify-content: center;
-    padding: 50px;
-  }
-  
-  .perfil-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .full-width {
-    width: 100%;
-    margin-bottom: 15px;
-  }
-  
-  .senha-card {
-    margin-top: 20px;
-  }
-  
-  .form-actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-  }
+  padding: 16px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 50px;
+}
+
+.perfil-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.senha-form {
+  margin-top: 20px;
+  padding-top: 20px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.senha-form h3 {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #1da1f2;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -7,8 +7,8 @@ import { AuthService } from './auth.service';
 
 export interface AtualizarPerfilRequest {
   nome: string;
-  username: string;
-  email: string;
+  senha: string;
+  foto?: string;
 }
 
 export interface AlterarSenhaRequest {
