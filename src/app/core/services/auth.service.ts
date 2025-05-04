@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, tap, BehaviorSubject } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { LoginRequest, RegisterRequest, AuthResponse, Usuario } from '../models/usuario.model';
+import { Injectable } from '@angular/core'; 
+import { HttpClient } from '@angular/common/http'; 
+import { Observable, tap, BehaviorSubject } from 'rxjs'; 
+import { Router } from '@angular/router'; 
+import { environment } from '../../../environments/environment'; 
+import { LoginRequest, RegisterRequest, AuthResponse, Usuario } from '../models/usuario.model';  
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,15 @@ export class AuthService {
   private baseUrl = environment.apiUrl;
   private currentUserSubject = new BehaviorSubject<Usuario | null>(null);
   
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {
     this.loadUserFromLocalStorage();
+  }
+  
+  get authState() {
+    return this.currentUserSubject.asObservable();
   }
   
   login(credentials: LoginRequest): Observable<AuthResponse> {
@@ -34,6 +42,8 @@ export class AuthService {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.currentUserSubject.next(null);
+    
+    this.router.navigate(['/login']);
   }
   
   getToken(): string | null {
@@ -46,6 +56,10 @@ export class AuthService {
   
   getCurrentUser(): Usuario | null {
     return this.currentUserSubject.value;
+  }
+  
+  updateCurrentUser(user: Usuario): void {
+    this.currentUserSubject.next(user);
   }
   
   getUserId(): number {

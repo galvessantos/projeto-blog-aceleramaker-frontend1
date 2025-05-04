@@ -50,8 +50,8 @@ export class PerfilComponent implements OnInit {
   ) {
     this.perfilForm = this.fb.group({
       nome: ['', [Validators.required, Validators.maxLength(100)]],
-      email: ['', [Validators.required, Validators.email]],
-      username: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]]
+      email: [{value: '', disabled: true}],
+      username: [{value: '', disabled: true}]
     });
 
     this.senhaForm = this.fb.group({
@@ -96,11 +96,26 @@ export class PerfilComponent implements OnInit {
   onSubmitPerfil(): void {
     if (this.perfilForm.valid) {
       this.submitting = true;
-      const perfilData = this.perfilForm.value;
+      
+      const perfilData = {
+        nome: this.perfilForm.getRawValue().nome,
+        username: this.usuario?.username || '',
+        email: this.usuario?.email || ''
+      };
       
       this.usuarioService.atualizarPerfil(perfilData).subscribe({
         next: (usuario) => {
           this.usuario = usuario;
+          
+          if (usuario) {
+            const currentUser = this.authService.getCurrentUser();
+            if (currentUser) {
+              const updatedUser = { ...currentUser, nome: usuario.nome };
+              localStorage.setItem('user', JSON.stringify(updatedUser));
+              this.authService.updateCurrentUser(updatedUser);
+            }
+          }
+          
           this.snackBar.open('Perfil atualizado com sucesso!', 'Fechar', {
             duration: 3000
           });

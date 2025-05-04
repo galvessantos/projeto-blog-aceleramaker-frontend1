@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Usuario } from '../models/usuario.model';
+import { AuthService } from './auth.service';
 
 export interface AtualizarPerfilRequest {
   nome: string;
@@ -19,19 +20,52 @@ export interface AlterarSenhaRequest {
   providedIn: 'root'
 })
 export class UsuarioService {
-  private apiUrl = `${environment.apiUrl}/usuarios`;
+  private apiUrl = `${environment.apiUrl}/v1/usuarios`;
   
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
   
   getPerfilUsuario(): Observable<Usuario> {
-    return this.http.get<Usuario>(`${this.apiUrl}/perfil`);
+    const userId = this.authService.getUserId();
+    
+    if (userId && userId > 0) {
+      return this.http.get<Usuario>(`${this.apiUrl}/${userId}`)
+        .pipe(
+          catchError(error => {
+            console.error('Erro ao buscar perfil:', error);
+            return throwError(() => new Error('Não foi possível carregar o perfil. ' + error.message));
+          })
+        );
+    }
+    
+    return throwError(() => new Error('Usuário não autenticado ou ID inválido'));
   }
   
   atualizarPerfil(perfilData: AtualizarPerfilRequest): Observable<Usuario> {
-    return this.http.put<Usuario>(`${this.apiUrl}/atualizar`, perfilData);
+    const userId = this.authService.getUserId();
+    
+    if (userId && userId > 0) {
+      return this.http.put<Usuario>(`${this.apiUrl}/${userId}`, perfilData)
+        .pipe(
+          catchError(error => {
+            console.error('Erro ao atualizar perfil:', error);
+            return throwError(() => new Error('Não foi possível atualizar o perfil. ' + error.message));
+          })
+        );
+    }
+    
+    return throwError(() => new Error('Usuário não autenticado ou ID inválido'));
   }
   
   alterarSenha(senhaData: AlterarSenhaRequest): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/alterar-senha`, senhaData);
+    return this.http.post<void>(`${this.apiUrl}/alterar-senha`, senhaData)
+      .pipe(
+        catchError(error => {
+          console.error('Erro ao alterar senha:', error);
+          return throwError(() => new Error('Não foi possível alterar a senha. ' + error.message));
+        })
+      );
   }
 }
