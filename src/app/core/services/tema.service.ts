@@ -1,5 +1,6 @@
+// tema.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Tema, CreateTema } from '../models/tema.model';
@@ -12,16 +13,16 @@ export class TemaService {
   
   constructor(private http: HttpClient) {}
   
+  createTema(tema: CreateTema): Observable<Tema> {
+    return this.http.post<Tema>(this.apiUrl, tema);
+  }
+  
   getAllTemas(): Observable<Tema[]> {
     return this.http.get<Tema[]>(this.apiUrl);
   }
   
   getTemaById(id: number): Observable<Tema> {
     return this.http.get<Tema>(`${this.apiUrl}/${id}`);
-  }
-  
-  createTema(tema: CreateTema): Observable<Tema> {
-    return this.http.post<Tema>(this.apiUrl, tema);
   }
   
   updateTema(id: number, tema: CreateTema): Observable<Tema> {

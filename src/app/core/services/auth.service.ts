@@ -8,7 +8,7 @@ import { LoginRequest, RegisterRequest, AuthResponse, Usuario } from '../models/
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = `${environment.apiUrl}/usuarios`;
+  private baseUrl = environment.apiUrl;
   private currentUserSubject = new BehaviorSubject<Usuario | null>(null);
   
   constructor(private http: HttpClient) {
@@ -16,7 +16,7 @@ export class AuthService {
   }
   
   login(credentials: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials)
+    return this.http.post<AuthResponse>(`${this.baseUrl}/auth/login`, credentials)
       .pipe(
         tap(response => {
           localStorage.setItem('token', response.token);
@@ -27,7 +27,7 @@ export class AuthService {
   }
   
   register(userData: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/cadastrar`, userData);
+    return this.http.post<AuthResponse>(`${this.baseUrl}/auth/register`, userData);
   }
   
   logout(): void {
@@ -48,6 +48,42 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
   
+  getUserId(): number {
+    const currentUser = this.getCurrentUser();
+    if (currentUser && currentUser.id !== undefined && currentUser.id !== null) {
+      const userId = Number(currentUser.id);
+      if (!isNaN(userId)) {
+        console.log('ID do usuário obtido do objeto:', userId);
+        return userId;
+      }
+    }
+    
+    console.log('Tentando extrair ID do token JWT...');
+    const token = this.getToken();
+    if (token) {
+      try {
+        const parts = token.split('.');
+        if (parts.length === 3) {
+          const payload = atob(parts[1]);
+          const decodedPayload = JSON.parse(payload);
+          
+          if (decodedPayload.userId !== undefined && decodedPayload.userId !== null) {
+            const userId = Number(decodedPayload.userId);
+            if (!isNaN(userId)) {
+              console.log('ID do usuário extraído do token:', userId);
+              return userId;
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Erro ao decodificar token:', error);
+      }
+    }
+    
+    console.error('Impossível obter ID do usuário válido');
+    return 0;
+  }
+  
   private loadUserFromLocalStorage(): void {
     const userJson = localStorage.getItem('user');
     
@@ -55,6 +91,7 @@ export class AuthService {
       try {
         const user = JSON.parse(userJson);
         this.currentUserSubject.next(user);
+        console.log('Usuário carregado do localStorage:', user);
       } catch (error) {
         console.error('Erro ao carregar usuário do localStorage:', error);
         this.logout();
