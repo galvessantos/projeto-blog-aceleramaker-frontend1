@@ -1,0 +1,137 @@
+.dashboard-container {
+    padding: 16px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    padding: 50px;
+  }
+  
+  .dashboard-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  .cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+  }
+  
+  .stat-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 12px rgba(106, 17, 203, 0.2);
+    }
+    
+    .stat-value {
+      font-size: 3rem;
+      font-weight: 500;
+      text-align: center;
+      padding: 16px 0;
+      color: #6a11cb;
+    }
+  }
+  
+  .charts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 16px;
+  }
+  
+  .chart-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    
+    .chart-container {
+      height: 300px;
+      position: relative;
+      margin-top: 16px;
+    }
+  }
+  
+  .recent-posts-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .recent-posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .recent-post-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+    
+    &:hover {
+      background-color: #f5f0ff;
+    }
+    
+    .post-author-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background-color: #9142e6;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      overflow: hidden;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      
+      mat-icon {
+        font-size: 32px;
+        height: 32px;
+        width: 32px;
+      }
+    }
+    
+    .post-info {
+      flex: 1;
+      
+      .post-title {
+        margin: 0 0 4px;
+        font-size: 16px;
+        font-weight: 500;
+      }
+      
+      .post-meta {
+        margin: 0;
+        font-size: 14px;
+        color: #666;
+        
+        .author-name {
+          font-weight: 500;
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .charts-container {
+      grid-template-columns: 1fr;
+    }
+  }

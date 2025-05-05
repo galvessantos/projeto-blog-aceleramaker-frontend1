@@ -11,6 +11,10 @@ export const routes: Routes = [
     canActivate: [() => import('./core/guards/auth.guard').then(g => g.authGuardFn)],
     children: [
       {
+        path: 'dashboard',
+        loadChildren: () => import('./features/dashboard/dashboard.routes').then(r => r.DASHBOARD_ROUTES)
+      },
+      {
         path: 'postagens',
         loadChildren: () => import('./features/postagens/postagens.routes').then(r => r.POSTAGENS_ROUTES)
       },
