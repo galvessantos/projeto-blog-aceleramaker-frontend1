@@ -2,16 +2,24 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { trigger, transition, style, animate } from '@angular/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 import { environment } from '../../../../../environments/environment';
 import { Postagem } from '../../../../core/models/postagem.model';
 import { PostagemService } from '../../../../core/services/postagem.service';
+import { TemaService } from '../../../../core/services/tema.service';
+import { Tema } from '../../../../core/models/tema.model';
 
 @Component({
   selector: 'app-postagem-lista',
@@ -27,7 +35,24 @@ import { PostagemService } from '../../../../core/services/postagem.service';
     MatPaginatorModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatMenuModule
+    MatMenuModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule
+  ],
+  animations: [
+    trigger('slideInOut', [
+      transition(':enter', [
+        style({ opacity: 0, height: '0', overflow: 'hidden' }),
+        animate('300ms ease-out', style({ opacity: 1, height: '*' }))
+      ]),
+      transition(':leave', [
+        style({ opacity: 1, height: '*', overflow: 'hidden' }),
+        animate('300ms ease-in', style({ opacity: 0, height: '0' }))
+      ])
+    ])
   ]
 })
 export class PostagemListaComponent implements OnInit {
@@ -36,6 +61,12 @@ export class PostagemListaComponent implements OnInit {
   loading = false;
   searchTerm = '';
   activeTab = 'para-voce';
+  showAdvancedSearch = false;
+  authorFilter = '';
+  themeFilter = '';
+  startDate: Date | null = null;
+  endDate: Date | null = null;
+  temas: Tema[] = [];
   
   totalItems = 0;
   pageSize = 10;
@@ -44,16 +75,40 @@ export class PostagemListaComponent implements OnInit {
   
   constructor(
     private postagemService: PostagemService,
+    private temaService: TemaService,
     private snackBar: MatSnackBar
   ) {}
   
   ngOnInit(): void {
     this.loadPostagens();
+    this.loadTemas();
+  }
+  
+  loadTemas(): void {
+    this.temaService.getAllTemas().subscribe({
+      next: (response) => {
+        this.temas = response;
+      },
+      error: (error) => {
+        console.error('Erro ao carregar temas:', error);
+      }
+    });
   }
 
   loadPostagens(): void {
     this.loading = true;
-    this.postagemService.getAllPosts(this.currentPage, this.pageSize, this.searchTerm).subscribe({
+    
+    const params = {
+      page: this.currentPage,
+      size: this.pageSize,
+      titulo: this.searchTerm,
+      autor: this.authorFilter,
+      temaId: this.themeFilter,
+      dataInicio: this.formatDateForApi(this.startDate),
+      dataFim: this.formatDateForApi(this.endDate)
+    };
+    
+    this.postagemService.getAllPostsWithFilters(params).subscribe({
       next: (response) => {
         this.postagens = response.content.map(post => {
           if (post.usuario && post.usuario.foto) {
@@ -73,6 +128,35 @@ export class PostagemListaComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+  
+  formatDateForApi(date: Date | null): string | null {
+    if (!date) return null;
+    
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}`;
+  }
+  
+  toggleAdvancedSearch(): void {
+    this.showAdvancedSearch = !this.showAdvancedSearch;
+  }
+  
+  clearAllFilters(): void {
+    this.searchTerm = '';
+    this.authorFilter = '';
+    this.themeFilter = '';
+    this.startDate = null;
+    this.endDate = null;
+    this.currentPage = 0;
+    this.loadPostagens();
+  }
+  
+  applyAdvancedSearch(): void {
+    this.currentPage = 0;
+    this.loadPostagens();
   }
   
   setActiveTab(tab: string): void {

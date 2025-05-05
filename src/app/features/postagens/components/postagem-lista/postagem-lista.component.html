@@ -4,18 +4,66 @@
       <h2 class="feed-title">Para você</h2>
       <div class="active-indicator"></div>
     </div>
-
+ 
     <div class="search-container">
-      <mat-icon>search</mat-icon>
-      <input
-        type="text"
-        placeholder="Buscar postagens"
-        [(ngModel)]="searchTerm"
-        (keyup.enter)="onSearch()"
-      >
-      <button *ngIf="searchTerm" mat-icon-button (click)="clearSearch()">
-        <mat-icon>close</mat-icon>
+      <div class="search-input-wrapper">
+        <mat-icon>search</mat-icon>
+        <input
+          type="text"
+          placeholder="Buscar postagens"
+          [(ngModel)]="searchTerm"
+          (keyup.enter)="onSearch()"
+        >
+        <button *ngIf="searchTerm" mat-icon-button (click)="clearSearch()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      
+      <button mat-icon-button class="filter-button" (click)="toggleAdvancedSearch()">
+        <mat-icon>tune</mat-icon>
       </button>
+    </div>
+    
+    <div class="advanced-search-panel" *ngIf="showAdvancedSearch" [@slideInOut]>
+      <h3 class="advanced-search-title">Filtros Avançados</h3>
+      
+      <div class="filter-fields">
+        <mat-form-field appearance="outline">
+          <mat-label>Autor</mat-label>
+          <input matInput [(ngModel)]="authorFilter" placeholder="Filtrar por autor">
+          <mat-icon matSuffix>person</mat-icon>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline">
+          <mat-label>Tema</mat-label>
+          <mat-select [(ngModel)]="themeFilter">
+            <mat-option [value]="">Todos os temas</mat-option>
+            <mat-option *ngFor="let tema of temas" [value]="tema.id">
+              {{ tema.descricao }}
+            </mat-option>
+          </mat-select>
+          <mat-icon matSuffix>label</mat-icon>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline">
+          <mat-label>Data inicial</mat-label>
+          <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate">
+          <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline">
+          <mat-label>Data final</mat-label>
+          <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate">
+          <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      
+      <div class="filter-actions">
+        <button mat-button (click)="clearAllFilters()">Limpar Filtros</button>
+        <button mat-raised-button color="primary" (click)="applyAdvancedSearch()">Aplicar Filtros</button>
+      </div>
     </div>
     
     <div class="loading-container" *ngIf="loading">
@@ -110,7 +158,7 @@
     >
     </mat-paginator>
   </div>
-
+ 
   <div class="trends-sidebar">
     <div class="trends-container">
       <h2 class="trends-title">O que está acontecendo</h2>
@@ -146,8 +194,8 @@
       </div>
     </div>
   </div>
-
+ 
   <button mat-fab color="primary" routerLink="/postagens/novo" class="new-post-button">
     <mat-icon>add</mat-icon>
   </button>
-</div>
+ </div>

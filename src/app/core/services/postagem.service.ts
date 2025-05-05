@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
@@ -74,6 +74,40 @@ export class PostagemService {
       tap(() => console.log('Postagem excluída com sucesso')),
       catchError(error => {
         console.error('Erro ao excluir postagem:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  getAllPostsWithFilters(params: any): Observable<PageResponse<Postagem>> {
+    let httpParams = new HttpParams()
+      .set('page', params.page.toString())
+      .set('size', params.size.toString());
+    
+    if (params.titulo) {
+      httpParams = httpParams.set('titulo', params.titulo);
+    }
+    
+    if (params.autor) {
+      httpParams = httpParams.set('autor', params.autor);
+    }
+    
+    if (params.temaId) {
+      httpParams = httpParams.set('temaId', params.temaId);
+    }
+    
+    if (params.dataInicio) {
+      httpParams = httpParams.set('dataInicio', params.dataInicio);
+    }
+    
+    if (params.dataFim) {
+      httpParams = httpParams.set('dataFim', params.dataFim);
+    }
+    
+    return this.http.get<PageResponse<Postagem>>(this.apiUrl, { params: httpParams }).pipe(
+      tap(response => console.log('Postagens filtradas recebidas:', response.content.length)),
+      catchError(error => {
+        console.error('Erro ao buscar postagens com filtros:', error);
         return throwError(() => error);
       })
     );
