@@ -111,6 +111,44 @@ html, body {
   margin: 16px;
 }
 
+.success-snackbar {
+  background-color: #10B981 !important;
+  color: white !important;
+}
+
+.error-snackbar {
+  background-color: #EF4444 !important;
+  color: white !important;
+}
+
+.info-snackbar {
+  background-color: #3B82F6 !important;
+  color: white !important;
+}
+
+.mat-mdc-snack-bar-container .mdc-snackbar__surface {
+  border-radius: 8px !important;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.pulse {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
 @media screen and (max-width: 599px) {
   .page-container {
     padding: 8px;
@@ -120,3 +158,4 @@ html, body {
     padding: 8px !important;
   }
 }
+
