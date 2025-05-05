@@ -12,5 +12,5 @@ import { CommonModule } from '@angular/common';
   template: '<router-outlet></router-outlet>'
 })
 export class AppComponent {
-  title = 'blog-pessoal-angular';
+  title = 'blog-pessoal';
 }
