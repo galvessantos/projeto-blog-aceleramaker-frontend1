@@ -11,6 +11,10 @@
   right: 0;
   z-index: 999;
   background-color: #6a11cb !important;
+  
+  @media (max-width: 600px) {
+    padding: 0 8px;
+  }
 }
 
 .app-toolbar mat-icon {
@@ -33,16 +37,33 @@
     width: auto;
     filter: brightness(0) invert(1);
   }
+  
+  @media (max-width: 600px) {
+    height: 28px;
+    margin-left: 4px;
+  }
 }
 
 .sidenav-container {
   flex: 1;
   margin-top: 64px;
+  
+  @media (max-width: 600px) {
+    margin-top: 56px;
+  }
 }
 
 .sidenav {
   width: 280px;
   border-right: 1px solid rgba(0, 0, 0, 0.12);
+  
+  @media (max-width: 992px) {
+    width: 240px;
+  }
+  
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 }
 
 .sidenav-content {
@@ -51,6 +72,11 @@
   height: calc(100% - 32px);
   padding: 16px;
   justify-content: space-between;
+  
+  @media (max-width: 768px) {
+    padding: 12px;
+    height: calc(100% - 24px);
+  }
 }
 
 .sidenav-content-container {
@@ -59,6 +85,10 @@
 
 .main-content {
   min-height: calc(100% - 64px);
+  
+  @media (max-width: 600px) {
+    min-height: calc(100% - 56px);
+  }
 }
 
 .active-link {
@@ -83,6 +113,14 @@
   span {
     font-weight: 500;
   }
+  
+  @media (max-width: 480px) {
+    padding: 6px 12px;
+    
+    mat-icon {
+      margin-right: 6px;
+    }
+  }
 }
 
 .mat-menu-item mat-icon {
@@ -94,6 +132,10 @@
   justify-content: center;
   margin-top: auto;
   padding: 20px 0;
+  
+  @media (max-width: 768px) {
+    padding: 16px 0;
+  }
 }
 
 .post-button {
@@ -110,6 +152,17 @@
   &:hover {
     background-color: darken(#6a11cb, 5%) !important;
   }
+  
+  @media (max-width: 768px) {
+    padding: 20px 0;
+    font-size: 1rem;
+  }
+  
+  @media (max-width: 480px) {
+    width: 90%;
+    padding: 16px 0;
+    font-size: 0.9rem;
+  }
 }
 
 mat-nav-list {
@@ -124,6 +177,16 @@ mat-nav-list {
     
     &:hover {
       background-color: rgba(106, 17, 203, 0.05);
+    }
+    
+    @media (max-width: 768px) {
+      height: 46px;
+      margin: 6px 0;
+    }
+    
+    @media (max-width: 480px) {
+      height: 42px;
+      margin: 4px 0;
     }
   }
 }
