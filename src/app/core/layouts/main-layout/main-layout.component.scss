@@ -41,13 +41,16 @@
 }
 
 .sidenav {
-  width: 250px;
+  width: 280px;
   border-right: 1px solid rgba(0, 0, 0, 0.12);
 }
 
-.sidenav-header {
+.sidenav-content {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 32px);
   padding: 16px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  justify-content: space-between;
 }
 
 .sidenav-content-container {
@@ -59,7 +62,7 @@
 }
 
 .active-link {
-  background-color: rgba(106, 17, 203, 0.1);
+  background-color: rgba(106, 17, 203, 0.1) !important;
   color: #6a11cb !important;
   font-weight: 500;
 }
@@ -84,4 +87,43 @@
 
 .mat-menu-item mat-icon {
   color: #6a11cb !important;
+}
+
+.post-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  padding: 20px 0;
+}
+
+.post-button {
+  width: 85%;
+  border-radius: 9999px;
+  padding: 25px 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  background-color: #6a11cb !important;
+  color: white !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s;
+  
+  &:hover {
+    background-color: darken(#6a11cb, 5%) !important;
+  }
+}
+
+mat-nav-list {
+  padding: 0;
+  margin-top: 16px;
+  
+  a.nav-item {
+    margin: 8px 0;
+    border-radius: 9999px;
+    transition: background-color 0.2s;
+    height: 50px;
+    
+    &:hover {
+      background-color: rgba(106, 17, 203, 0.05);
+    }
+  }
 }

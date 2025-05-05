@@ -29,11 +29,6 @@ import { AuthService } from '../../services/auth.service';
   ]
 })
 export class MainLayoutComponent {
-  menuItems = [
-    { label: 'Postagens', icon: 'article', route: '/postagens' },
-    { label: 'Temas', icon: 'bookmark', route: '/temas' }
-  ];
-  
   constructor(private authService: AuthService) {}
   
   get userName(): string {

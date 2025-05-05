@@ -50,8 +50,6 @@ export class PostagemListaComponent implements OnInit {
     this.loadPostagens();
   }
   
-// Em postagem-lista.component.ts, modifique o método loadPostagens:
-
 loadPostagens(): void {
   this.loading = true;
   this.postagemService.getAllPosts(this.currentPage, this.pageSize, this.searchTerm).subscribe({

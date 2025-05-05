@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-sidenav',
@@ -13,13 +14,15 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
     RouterModule,
     MatListModule,
-    MatIconModule
+    MatIconModule,
+    MatButtonModule
   ]
 })
 export class SidenavComponent {
   menuItems = [
-    { label: 'Dashboard', icon: 'dashboard', route: '/dashboard' },
+    { label: 'Grok', icon: 'flash_on', route: '/grok' },
     { label: 'Postagens', icon: 'article', route: '/postagens' },
-    { label: 'Temas', icon: 'category', route: '/temas' }
+    { label: 'Temas', icon: 'bookmark', route: '/temas' },
+    { label: 'Mais', icon: 'more_horiz', route: '/mais' }
   ];
 }
