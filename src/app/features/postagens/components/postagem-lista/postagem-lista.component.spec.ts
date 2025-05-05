@@ -1,193 +1,204 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { of, throwError } from 'rxjs';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { trigger, transition, style, animate } from '@angular/animations';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
-import { PostagemListaComponent } from './postagem-lista.component';
+import { environment } from '../../../../../environments/environment';
+import { Postagem } from '../../../../core/models/postagem.model';
 import { PostagemService } from '../../../../core/services/postagem.service';
 import { TemaService } from '../../../../core/services/tema.service';
+import { Tema } from '../../../../core/models/tema.model';
 
-describe('PostagemListaComponent', () => {
-  let component: PostagemListaComponent;
-  let fixture: ComponentFixture<PostagemListaComponent>;
-  let postagemService: jasmine.SpyObj<PostagemService>;
-  let temaService: jasmine.SpyObj<TemaService>;
-
-  const mockPageResponse = {
-    content: [
-      {
-        id: 1,
-        titulo: 'Postagem 1',
-        texto: 'Texto da postagem 1',
-        creationTimestamp: '2025-04-20T10:30:00',
-        updateTimestamp: '2025-04-20T10:30:00',
-        tema: { id: 1, descricao: 'Angular' },
-        usuario: {
-          id: 1, 
-          nome: 'Usuário Teste', 
-          username: 'usuario_teste', 
-          email: 'teste@email.com'
-        }
+@Component({
+  selector: 'app-postagem-lista',
+  templateUrl: './postagem-lista.component.html',
+  styleUrls: ['./postagem-lista.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatMenuModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule
+  ],
+  animations: [
+    trigger('slideInOut', [
+      transition(':enter', [
+        style({ opacity: 0, height: '0', overflow: 'hidden' }),
+        animate('300ms ease-out', style({ opacity: 1, height: '*' }))
+      ]),
+      transition(':leave', [
+        style({ opacity: 1, height: '*', overflow: 'hidden' }),
+        animate('300ms ease-in', style({ opacity: 0, height: '0' }))
+      ])
+    ])
+  ]
+})
+export class PostagemListaComponent implements OnInit {
+  postagens: Postagem[] = [];
+  expandedPosts = new Set<number>();
+  loading = false;
+  searchTerm = '';
+  activeTab = 'para-voce';
+  showAdvancedSearch = false;
+  authorFilter = '';
+  themeFilter = '';
+  startDate: Date | null = null;
+  endDate: Date | null = null;
+  temas: Tema[] = [];
+  
+  totalItems = 0;
+  pageSize = 10;
+  currentPage = 0;
+  pageSizeOptions = [5, 10, 25];
+  
+  constructor(
+    private postagemService: PostagemService,
+    private temaService: TemaService,
+    private snackBar: MatSnackBar
+  ) {}
+  
+  ngOnInit(): void {
+    this.loadPostagens();
+    this.loadTemas();
+  }
+  
+  loadTemas(): void {
+    this.temaService.getAllTemas().subscribe({
+      next: (response) => {
+        this.temas = response;
       },
-      {
-        id: 2,
-        titulo: 'Postagem 2',
-        texto: 'Texto da postagem 2',
-        creationTimestamp: '2025-04-21T14:20:00',
-        updateTimestamp: '2025-04-21T14:20:00',
-        tema: { id: 2, descricao: 'Spring Boot' },
-        usuario: {
-          id: 1, 
-          nome: 'Usuário Teste', 
-          username: 'usuario_teste', 
-          email: 'teste@email.com'
-        }
+      error: (error) => {
+        console.error('Erro ao carregar temas:', error);
       }
-    ],
-    pageable: {
-      pageNumber: 0,
-      pageSize: 10,
-      sort: {
-        empty: true,
-        sorted: false,
-        unsorted: true
+    });
+  }
+
+  loadPostagens(): void {
+    this.loading = true;
+    
+    const params = {
+      page: this.currentPage,
+      size: this.pageSize,
+      titulo: this.searchTerm,
+      autor: this.authorFilter,
+      temaId: this.themeFilter,
+      dataInicio: this.formatDateForApi(this.startDate),
+      dataFim: this.formatDateForApi(this.endDate)
+    };
+    
+    this.postagemService.getAllPostsWithFilters(params).subscribe({
+      next: (response) => {
+        this.postagens = response.content.map(post => {
+          if (post.usuario && post.usuario.foto) {
+            post.usuario.foto = this.formatUserPhoto(post.usuario.foto);
+          }
+          return post;
+        });
+        this.totalItems = response.totalElements;
+        this.loading = false;
       },
-      offset: 0,
-      unpaged: false,
-      paged: true
-    },
-    last: true,
-    totalElements: 2,
-    totalPages: 1,
-    size: 10,
-    number: 0,
-    sort: {
-      empty: true,
-      sorted: false,
-      unsorted: true
-    },
-    first: true,
-    numberOfElements: 2,
-    empty: false
-  };
+      error: (error) => {
+        this.snackBar.open('Erro ao carregar postagens: ' + error.message, 'Fechar', {
+          duration: 5000
+        });
+        this.loading = false;
+      }
+    });
+  }
+  
+  formatDateForApi(date: Date | null): string | null {
+    if (!date) return null;
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
 
-  const mockTemas = [
-    { id: 1, descricao: 'Angular' },
-    { id: 2, descricao: 'Spring Boot' },
-    { id: 3, descricao: 'Java' }
-  ];
+  formatUserPhoto(photo: string): string {
+    if (!photo.startsWith('http') && !photo.startsWith('data:')) {
+      return `${environment.apiUrl}/${photo}`;
+    }
+    return photo;
+  }
+  
+  toggleAdvancedSearch(): void {
+    this.showAdvancedSearch = !this.showAdvancedSearch;
+  }
+  
+  clearAllFilters(): void {
+    this.searchTerm = '';
+    this.authorFilter = '';
+    this.themeFilter = '';
+    this.startDate = null;
+    this.endDate = null;
+    this.currentPage = 0;
+    this.loadPostagens();
+  }
+  
+  applyAdvancedSearch(): void {
+    this.currentPage = 0;
+    this.loadPostagens();
+  }
+  
+  setActiveTab(tab: string): void {
+    this.activeTab = tab;
+    this.loadPostagens();
+  }
+  
+  toggleExpanded(postagem: Postagem): void {
+    const id = postagem.id;
+    if (this.expandedPosts.has(id)) {
+      this.expandedPosts.delete(id);
+    } else {
+      this.expandedPosts.add(id);
+    }
+  }
+  
+  isExpanded(postagem: Postagem): boolean {
+    return this.expandedPosts.has(postagem.id);
+  }
+  
+  onPageChange(event: PageEvent): void {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadPostagens();
+  }
+  
+  onSearch(): void {
+    this.currentPage = 0;
+    this.loadPostagens();
+  }
+  
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.currentPage = 0;
+    this.loadPostagens();
+  }
 
-  beforeEach(async () => {
-    const postagemServiceSpy = jasmine.createSpyObj('PostagemService', [
-      'getAllPostsWithFilters', 'getAllPosts'
-    ]);
-    const temaServiceSpy = jasmine.createSpyObj('TemaService', ['getAllTemas']);
-
-    await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        MatSnackBarModule,
-        BrowserAnimationsModule,
-        PostagemListaComponent
-      ],
-      providers: [
-        { provide: PostagemService, useValue: postagemServiceSpy },
-        { provide: TemaService, useValue: temaServiceSpy }
-      ]
-    }).compileComponents();
-
-    postagemService = TestBed.inject(PostagemService) as jasmine.SpyObj<PostagemService>;
-    temaService = TestBed.inject(TemaService) as jasmine.SpyObj<TemaService>;
-
-    postagemService.getAllPostsWithFilters.and.returnValue(of(mockPageResponse));
-    postagemService.getAllPosts.and.returnValue(of(mockPageResponse));
-    temaService.getAllTemas.and.returnValue(of(mockTemas));
-
-    fixture = TestBed.createComponent(PostagemListaComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should load postagens on init', () => {
-    expect(postagemService.getAllPostsWithFilters).toHaveBeenCalled();
-    expect(component.postagens.length).toBe(2);
-    expect(component.totalItems).toBe(2);
-  });
-
-  it('should load temas on init', () => {
-    expect(temaService.getAllTemas).toHaveBeenCalled();
-    expect(component.temas.length).toBe(3);
-  });
-
-  it('should toggle expanded state of a postagem', () => {
-    const postagem = mockPageResponse.content[0];
-    expect(component.isExpanded(postagem)).toBeFalsy();
-    
-    component.toggleExpanded(postagem);
-    expect(component.isExpanded(postagem)).toBeTruthy();
-    
-    component.toggleExpanded(postagem);
-    expect(component.isExpanded(postagem)).toBeFalsy();
-  });
-
-  it('should search postagens when onSearch is called', fakeAsync(() => {
-    component.searchTerm = 'Angular';
-    component.onSearch();
-    tick();
-
-    expect(component.currentPage).toBe(0);
-    expect(postagemService.getAllPostsWithFilters).toHaveBeenCalled();
-  }));
-
-  it('should clear search term when clearSearch is called', fakeAsync(() => {
-    component.searchTerm = 'Angular';
-    component.clearSearch();
-    tick();
-
-    expect(component.searchTerm).toBe('');
-    expect(component.currentPage).toBe(0);
-    expect(postagemService.getAllPostsWithFilters).toHaveBeenCalled();
-  }));
-
-  it('should toggle advanced search panel', () => {
-    expect(component.showAdvancedSearch).toBeFalsy();
-    component.toggleAdvancedSearch();
-    expect(component.showAdvancedSearch).toBeTruthy();
-    component.toggleAdvancedSearch();
-    expect(component.showAdvancedSearch).toBeFalsy();
-  });
-
-  it('should clear all filters when clearAllFilters is called', fakeAsync(() => {
-    component.searchTerm = 'Angular';
-    component.authorFilter = 'John';
-    component.themeFilter = '1';
-    component.startDate = new Date();
-    component.endDate = new Date();
-
-    component.clearAllFilters();
-    tick();
-
-    expect(component.searchTerm).toBe('');
-    expect(component.authorFilter).toBe('');
-    expect(component.themeFilter).toBe('');
-    expect(component.startDate).toBeNull();
-    expect(component.endDate).toBeNull();
-    expect(component.currentPage).toBe(0);
-    expect(postagemService.getAllPostsWithFilters).toHaveBeenCalled();
-  }));
-
-  it('should handle error when loading postagens fails', fakeAsync(() => {
-    postagemService.getAllPostsWithFilters.and.returnValue(throwError(() => new Error('Erro ao carregar')));
-    
-    component.loadPostagens();
-    tick();
-
-    expect(component.loading).toBeFalse();
-    expect(component.postagens.length).toBe(0);
-  }));
-});
+  trackByPostId(index: number, postagem: Postagem): number {
+    return postagem.id;
+  }
+}
