@@ -1,32 +1,233 @@
 .page-container {
-    padding: 16px;
-    max-width: 1200px;
-    margin: 0 auto;
+  padding: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 599px) {
+  .page-container {
+    padding: 8px;
+  }
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 599px) {
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-bottom: 12px;
   }
   
-  .header-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  .header-actions h1 {
+    margin-bottom: 0;
+    text-align: center;
+  }
+  
+  .header-actions button {
+    width: 100%;
+  }
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+@media (max-width: 767px) {
+  .table-responsive {
     margin-bottom: 16px;
   }
-  
-  .table-responsive {
-    overflow-x: auto;
-  }
-  
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+@media (max-width: 599px) {
   .loading-container {
-    display: flex;
-    justify-content: center;
-    padding: 20px;
+    padding: 16px;
+  }
+}
+
+.no-records {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+@media (max-width: 599px) {
+  .no-records {
+    padding: 16px;
+  }
+}
+
+table {
+  width: 100%;
+}
+
+@media (max-width: 599px) {
+  .mat-mdc-table {
+    border: 0;
+    vertical-align: middle;
+  }
+
+  .mat-mdc-table caption {
+    font-size: 1em;
   }
   
-  .no-records {
-    text-align: center;
-    padding: 20px;
+  .mat-mdc-table .mat-mdc-header-row {
+    height: 0;
+    border-bottom: none;
+  }
+  
+  .mat-mdc-table .mat-mdc-header-cell {
+    border: 10px solid;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+  
+  .mat-mdc-table .mat-mdc-row {
+    border-bottom: 5px solid #ddd;
+    display: block;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .mat-mdc-table .mat-mdc-cell {
+    border-bottom: 1px solid #ddd;
+    display: block;
+    font-size: 14px;
+    text-align: right;
+    padding: 8px !important;
+    height: auto;
+  }
+  
+  .mat-mdc-table .mat-mdc-cell:before {
+    content: attr(data-label);
+    float: left;
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 12px;
     color: #666;
   }
   
-  table {
-    width: 100%;
+  .mat-mdc-table .mat-mdc-cell:last-child {
+    border-bottom: 0;
   }
+  
+  .mat-mdc-table .mat-mdc-cell:first-of-type {
+    padding-top: 16px !important;
+  }
+  
+  .mat-mdc-table .mat-mdc-cell:last-of-type {
+    padding-bottom: 16px !important;
+  }
+}
+
+mat-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+@media (max-width: 599px) {
+  mat-card {
+    border-radius: 6px;
+  }
+}
+
+mat-card-content {
+  padding: 16px;
+}
+
+@media (max-width: 599px) {
+  mat-card-content {
+    padding: 12px;
+  }
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 16px;
+  color: #2d3748;
+}
+
+@media (max-width: 599px) {
+  h1 {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+}
+
+.mat-mdc-row:hover {
+  background-color: #f9f9f9;
+}
+
+.mat-icon-button {
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+}
+
+@media (max-width: 599px) {
+  .mat-icon-button {
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+  }
+  
+  .mat-icon-button .mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+  }
+}
+
+button.mat-raised-button {
+  background-color: #6a11cb;
+  color: white;
+  border-radius: 4px;
+  padding: 0 16px;
+  height: 36px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+button.mat-raised-button:hover {
+  background-color: #5a0cb2;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 599px) {
+  button.mat-raised-button {
+    padding: 0 12px;
+    height: 36px;
+    font-size: 14px;
+    border-radius: 4px;
+  }
+  
+  button.mat-raised-button .mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
+  }
+}

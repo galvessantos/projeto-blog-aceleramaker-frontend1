@@ -11,8 +11,10 @@
   right: 0;
   z-index: 999;
   background-color: #6a11cb !important;
-  
-  @media (max-width: 600px) {
+}
+
+@media (max-width: 600px) {
+  .app-toolbar {
     padding: 0 8px;
   }
 }
@@ -31,14 +33,16 @@
   align-items: center;
   cursor: pointer;
   margin-left: 8px;
-  
-  img {
-    height: 100%;
-    width: auto;
-    filter: brightness(0) invert(1);
-  }
-  
-  @media (max-width: 600px) {
+}
+
+.logo img {
+  height: 100%;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
+@media (max-width: 600px) {
+  .logo {
     height: 28px;
     margin-left: 4px;
   }
@@ -47,8 +51,10 @@
 .sidenav-container {
   flex: 1;
   margin-top: 64px;
-  
-  @media (max-width: 600px) {
+}
+
+@media (max-width: 600px) {
+  .sidenav-container {
     margin-top: 56px;
   }
 }
@@ -56,12 +62,16 @@
 .sidenav {
   width: 280px;
   border-right: 1px solid rgba(0, 0, 0, 0.12);
-  
-  @media (max-width: 992px) {
+}
+
+@media (max-width: 992px) {
+  .sidenav {
     width: 240px;
   }
-  
-  @media (max-width: 768px) {
+}
+
+@media (max-width: 768px) {
+  .sidenav {
     width: 100%;
   }
 }
@@ -72,8 +82,10 @@
   height: calc(100% - 32px);
   padding: 16px;
   justify-content: space-between;
-  
-  @media (max-width: 768px) {
+}
+
+@media (max-width: 768px) {
+  .sidenav-content {
     padding: 12px;
     height: calc(100% - 24px);
   }
@@ -85,9 +97,12 @@
 
 .main-content {
   min-height: calc(100% - 64px);
-  
-  @media (max-width: 600px) {
+}
+
+@media (max-width: 600px) {
+  .main-content {
     min-height: calc(100% - 56px);
+    padding: 8px;
   }
 }
 
@@ -105,21 +120,23 @@
   display: flex;
   align-items: center;
   padding: 8px 16px;
-  
-  mat-icon {
-    margin-right: 8px;
-  }
-  
-  span {
-    font-weight: 500;
-  }
-  
-  @media (max-width: 480px) {
+}
+
+.user-menu-header mat-icon {
+  margin-right: 8px;
+}
+
+.user-menu-header span {
+  font-weight: 500;
+}
+
+@media (max-width: 480px) {
+  .user-menu-header {
     padding: 6px 12px;
-    
-    mat-icon {
-      margin-right: 6px;
-    }
+  }
+  
+  .user-menu-header mat-icon {
+    margin-right: 6px;
   }
 }
 
@@ -132,8 +149,10 @@
   justify-content: center;
   margin-top: auto;
   padding: 20px 0;
-  
-  @media (max-width: 768px) {
+}
+
+@media (max-width: 768px) {
+  .post-button-container {
     padding: 16px 0;
   }
 }
@@ -148,17 +167,21 @@
   color: white !important;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   transition: background-color 0.2s;
-  
-  &:hover {
-    background-color: darken(#6a11cb, 5%) !important;
-  }
-  
-  @media (max-width: 768px) {
+}
+
+.post-button:hover {
+  background-color: darken(#6a11cb, 5%) !important;
+}
+
+@media (max-width: 768px) {
+  .post-button {
     padding: 20px 0;
     font-size: 1rem;
   }
-  
-  @media (max-width: 480px) {
+}
+
+@media (max-width: 480px) {
+  .post-button {
     width: 90%;
     padding: 16px 0;
     font-size: 0.9rem;
@@ -168,25 +191,29 @@
 mat-nav-list {
   padding: 0;
   margin-top: 16px;
-  
-  a.nav-item {
-    margin: 8px 0;
-    border-radius: 9999px;
-    transition: background-color 0.2s;
-    height: 50px;
-    
-    &:hover {
-      background-color: rgba(106, 17, 203, 0.05);
-    }
-    
-    @media (max-width: 768px) {
-      height: 46px;
-      margin: 6px 0;
-    }
-    
-    @media (max-width: 480px) {
-      height: 42px;
-      margin: 4px 0;
-    }
+}
+
+mat-nav-list a.nav-item {
+  margin: 8px 0;
+  border-radius: 9999px;
+  transition: background-color 0.2s;
+  height: 50px;
+}
+
+mat-nav-list a.nav-item:hover {
+  background-color: rgba(106, 17, 203, 0.05);
+}
+
+@media (max-width: 768px) {
+  mat-nav-list a.nav-item {
+    height: 46px;
+    margin: 6px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  mat-nav-list a.nav-item {
+    height: 42px;
+    margin: 4px 0;
   }
 }
