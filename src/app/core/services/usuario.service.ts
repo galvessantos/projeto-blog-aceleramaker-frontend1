@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, throwError, tap } from 'rxjs'; 
 import { environment } from '../../../environments/environment';
 import { Usuario } from '../models/usuario.model';
 import { AuthService } from './auth.service';
@@ -43,20 +43,20 @@ export class UsuarioService {
     return throwError(() => new Error('Usuário não autenticado ou ID inválido'));
   }
   
-  atualizarPerfil(perfilData: AtualizarPerfilRequest): Observable<Usuario> {
-    const userId = this.authService.getUserId();
-    
-    if (userId && userId > 0) {
-      return this.http.put<Usuario>(`${this.apiUrl}/${userId}`, perfilData)
-        .pipe(
-          catchError(error => {
-            console.error('Erro ao atualizar perfil:', error);
-            return throwError(() => new Error('Não foi possível atualizar o perfil. ' + error.message));
-          })
-        );
-    }
-    
-    return throwError(() => new Error('Usuário não autenticado ou ID inválido'));
+  atualizarPerfil(formData: FormData): Observable<Usuario> {
+    return this.http.put<Usuario>(`${this.apiUrl}/perfil`, formData)
+      .pipe(
+        tap((usuarioAtualizado: Usuario) => {
+          this.authService.updateCurrentUser(usuarioAtualizado);
+        }),
+        catchError(error => {
+          let errorMsg = 'Erro ao atualizar perfil';
+          if (error.error?.message) {
+            errorMsg = error.error.message;
+          }
+          return throwError(() => new Error(errorMsg));
+        })
+      );
   }
   
   alterarSenha(senhaData: AlterarSenhaRequest): Observable<void> {

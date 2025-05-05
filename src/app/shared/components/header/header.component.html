@@ -1,31 +1,33 @@
-<mat-toolbar color="primary">
-    <button mat-icon-button (click)="toggleSidenav.emit()" *ngIf="isLoggedIn">
-      <mat-icon>menu</mat-icon>
+<mat-toolbar style="background-color: #6a11cb;">
+  <button mat-icon-button (click)="toggleSidenav.emit()" *ngIf="isLoggedIn" style="color: white;">
+    <mat-icon>menu</mat-icon>
+  </button>
+  
+  <div class="logo" routerLink="/">
+    <img src="assets/images/twinterior-logo.svg" alt="Twinterior Logo">
+  </div>
+  
+  <span class="spacer"></span>
+  
+  <ng-container *ngIf="isLoggedIn; else loginButtons">
+    <button mat-button [matMenuTriggerFor]="userMenu" style="color: white;">
+      <mat-icon>account_circle</mat-icon>
+      <span>Minha Conta</span>
     </button>
-    
-    <span class="logo" routerLink="/">Blog Pessoal</span>
-    
-    <span class="spacer"></span>
-    
-    <ng-container *ngIf="isLoggedIn; else loginButtons">
-      <button mat-button [matMenuTriggerFor]="userMenu">
-        <mat-icon>account_circle</mat-icon>
-        Minha Conta
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item routerLink="/usuario/perfil">
+        <mat-icon>person</mat-icon>
+        Perfil
       </button>
-      <mat-menu #userMenu="matMenu">
-        <button mat-menu-item routerLink="/usuario/perfil">
-          <mat-icon>person</mat-icon>
-          Perfil
-        </button>
-        <button mat-menu-item (click)="logout()">
-          <mat-icon>exit_to_app</mat-icon>
-          Sair
-        </button>
-      </mat-menu>
-    </ng-container>
-    
-    <ng-template #loginButtons>
-      <button mat-button routerLink="/login">Entrar</button>
-      <button mat-button routerLink="/register">Registrar</button>
-    </ng-template>
-  </mat-toolbar>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>exit_to_app</mat-icon>
+        Sair
+      </button>
+    </mat-menu>
+  </ng-container>
+  
+  <ng-template #loginButtons>
+    <button mat-button routerLink="/login" style="color: white;">Entrar</button>
+    <button mat-button routerLink="/register" style="background-color: white; color: #6a11cb;">Registrar</button>
+  </ng-template>
+</mat-toolbar>

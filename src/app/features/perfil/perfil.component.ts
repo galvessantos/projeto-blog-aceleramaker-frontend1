@@ -14,6 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../core/services/auth.service';
 import { UsuarioService } from '../../core/services/usuario.service';
 import { Usuario } from '../../core/models/usuario.model';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-perfil',
@@ -42,6 +43,9 @@ export class PerfilComponent implements OnInit {
   changingPassword = false;
   usuario: Usuario | null = null;
   showSenhaForm = false;
+  selectedFile: File | null = null;
+  imagePreview: string | null = null;
+  environment = environment;
 
   constructor(
     private fb: FormBuilder,
@@ -75,23 +79,67 @@ export class PerfilComponent implements OnInit {
       this.loading = false;
     } else {
       this.usuarioService.getPerfilUsuario().subscribe({
-        next: (usuario) => {
-          this.usuario = usuario;
+        next: (usuarioData: Usuario) => {
+          this.usuario = usuarioData;
           this.perfilForm.patchValue({
-            nome: usuario.nome,
-            email: usuario.email,
-            username: usuario.username
+            nome: usuarioData.nome,
+            email: usuarioData.email,
+            username: usuarioData.username
           });
           this.loading = false;
         },
-        error: (error) => {
-          this.snackBar.open('Erro ao carregar perfil: ' + error.message, 'Fechar', {
+        error: (errorData: any) => {
+          this.snackBar.open('Erro ao carregar perfil: ' + errorData.message, 'Fechar', {
             duration: 5000
           });
           this.loading = false;
         }
       });
     }
+    
+    this.authService.authState.subscribe(user => {
+      if (user) {
+        this.usuario = user;
+      }
+    });
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+      
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      const maxSize = 5 * 1024 * 1024;
+      
+      if (!allowedTypes.includes(this.selectedFile.type)) {
+        this.snackBar.open('Apenas imagens JPG, PNG ou GIF são permitidas', 'Fechar', {
+          duration: 3000
+        });
+        this.resetFileInput(input);
+        return;
+      }
+      
+      if (this.selectedFile.size > maxSize) {
+        this.snackBar.open('A imagem deve ter no máximo 5MB', 'Fechar', {
+          duration: 3000
+        });
+        this.resetFileInput(input);
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result as string;
+      };
+      reader.readAsDataURL(this.selectedFile);
+    }
+  }
+  
+  resetFileInput(input: HTMLInputElement): void {
+    input.value = '';
+    this.selectedFile = null;
+    this.imagePreview = null;
   }
 
   toggleSenhaForm(): void {
@@ -104,33 +152,28 @@ export class PerfilComponent implements OnInit {
   onSubmitPerfil(): void {
     if (this.perfilForm.valid) {
       this.submitting = true;
-
-      const perfilData = {
-        nome: this.perfilForm.getRawValue().nome,
-        senha: '',
-        foto: this.usuario?.foto || ''
-      };
-
-      this.usuarioService.atualizarPerfil(perfilData).subscribe({
-        next: (usuario) => {
-          this.usuario = usuario;
-
-          if (usuario) {
-            const currentUser = this.authService.getCurrentUser();
-            if (currentUser) {
-              const updatedUser = { ...currentUser, nome: usuario.nome };
-              localStorage.setItem('user', JSON.stringify(updatedUser));
-              this.authService.updateCurrentUser(updatedUser);
-            }
-          }
-
+      
+      const formData = new FormData();
+      formData.append('nome', this.perfilForm.getRawValue().nome);
+      
+      if (this.selectedFile) {
+        formData.append('foto', this.selectedFile, this.selectedFile.name);
+      }
+      
+      this.usuarioService.atualizarPerfil(formData).subscribe({
+        next: (usuarioData: Usuario) => {
+          this.usuario = usuarioData;
+          this.authService.updateCurrentUser(usuarioData);
+          
           this.snackBar.open('Perfil atualizado com sucesso!', 'Fechar', {
             duration: 3000
           });
           this.submitting = false;
+          this.selectedFile = null;
+          this.imagePreview = null;
         },
-        error: (error) => {
-          this.snackBar.open('Erro ao atualizar perfil: ' + error.message, 'Fechar', {
+        error: (errorData: any) => {
+          this.snackBar.open('Erro ao atualizar perfil: ' + errorData.message, 'Fechar', {
             duration: 5000
           });
           this.submitting = false;
@@ -156,8 +199,8 @@ export class PerfilComponent implements OnInit {
           this.changingPassword = false;
           this.showSenhaForm = false;
         },
-        error: (error) => {
-          this.snackBar.open('Erro ao alterar senha: ' + error.message, 'Fechar', {
+        error: (errorData: any) => {
+          this.snackBar.open('Erro ao alterar senha: ' + errorData.message, 'Fechar', {
             duration: 5000
           });
           this.changingPassword = false;
@@ -176,5 +219,17 @@ export class PerfilComponent implements OnInit {
     }
 
     return null;
+  }
+
+  getImageUrl(path: string | null | undefined): string {
+    if (!path) {
+      return '';
+    }
+    
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      return path;
+    }
+  
+    return `${environment.apiUrl}/${path}`;
   }
 }

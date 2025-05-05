@@ -60,6 +60,8 @@ export class AuthService {
   
   updateCurrentUser(user: Usuario): void {
     this.currentUserSubject.next(user);
+    
+    localStorage.setItem('user', JSON.stringify(user));
   }
   
   getUserId(): number {

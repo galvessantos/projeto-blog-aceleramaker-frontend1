@@ -1,23 +1,44 @@
 @use '@angular/material' as mat;
-@includemat.core();
+@include mat.core();
 
-$primary-palette: mat.$m2-indigo-palette;
-$accent-palette:  mat.$m2-pink-palette;
-$warn-palette:    mat.$m2-red-palette;
+$twinterior-primary: (
+  50: #f3e8fd,
+  100: #e1c6fa,
+  200: #cea3f7,
+  300: #ba7ff4,
+  400: #aa63f1,
+  500: #9a47ee,
+  600: #8a40e6,
+  700: #7637dd,
+  800: #6a11cb, 
+  900: #5a0cb2,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  )
+);
 
-$blog-primary: mat.m2-define-palette($primary-palette);
-$blog-accent:  mat.m2-define-palette($accent-palette, A200, A100, A400);
-$blog-warn:    mat.m2-define-palette($warn-palette);
+$twinterior-primary-palette: mat.m2-define-palette($twinterior-primary, 800);
+$twinterior-accent-palette: mat.m2-define-palette($twinterior-primary, 300);
+$twinterior-warn-palette: mat.m2-define-palette(mat.$m2-red-palette);
 
-$blog-theme: mat.m2-define-light-theme((
+$twinterior-theme: mat.m2-define-light-theme((
   color: (
-    primary: $blog-primary,
-    accent:  $blog-accent,
-    warn:    $blog-warn,
+    primary: $twinterior-primary-palette,
+    accent: $twinterior-accent-palette,
+    warn: $twinterior-warn-palette,
   )
 ));
 
-@include mat.all-component-themes($blog-theme);
+@include mat.all-component-themes($twinterior-theme);
 
 html, body {
   height: 100%;
@@ -99,5 +120,3 @@ html, body {
     padding: 8px !important;
   }
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -1,84 +1,112 @@
 <div class="page-container">
-    <div class="header-actions">
-      <h1>Postagens</h1>
-      <button mat-raised-button color="primary" routerLink="/postagens/novo">
-        <mat-icon>add</mat-icon>
-        Nova Postagem
-      </button>
+  <div class="header-actions">
+    <button mat-fab color="primary" routerLink="/postagens/novo" class="new-post-button">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+  
+  <div class="search-container">
+    <mat-icon>search</mat-icon>
+    <input
+      type="text"
+      placeholder="Buscar postagens"
+      [(ngModel)]="searchTerm"
+      (keyup.enter)="onSearch()"
+    >
+    <button *ngIf="searchTerm" mat-icon-button (click)="clearSearch()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  
+  <div class="loading-container" *ngIf="loading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+  
+  <div class="posts-container" *ngIf="!loading">
+    <div class="no-posts" *ngIf="postagens.length === 0">
+      <mat-icon>sentiment_dissatisfied</mat-icon>
+      <p>Nenhuma postagem encontrada.</p>
     </div>
     
-    <mat-card>
-      <mat-card-content>
-        <div class="search-container">
-          <mat-form-field appearance="outline" class="search-field">
-            <mat-label>Buscar por título</mat-label>
-            <input matInput [(ngModel)]="searchTerm">
-            <button *ngIf="searchTerm" matSuffix mat-icon-button (click)="clearSearch()">
-              <mat-icon>close</mat-icon>
+    <div
+      class="post-card"
+      *ngFor="let postagem of postagens"
+      (click)="toggleExpanded(postagem)"
+      [class.expanded]="isExpanded(postagem)"
+    >
+      <div class="post-header">
+        <div class="user-avatar">
+          <img *ngIf="postagem.usuario?.foto" [src]="postagem.usuario.foto" alt="Foto de perfil" class="avatar-img">
+          <mat-icon *ngIf="!postagem.usuario?.foto">account_circle</mat-icon>
+        </div>
+        <div class="post-user-info">
+          <div class="user-name">{{ postagem.usuario.nome }}</div>
+          <div class="user-handle">
+            {{ '@' + (postagem.usuario.username || 'usuario') }}
+          </div>
+        </div>
+        <div class="post-actions">
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="postMenu"
+            (click)="$event.stopPropagation()"
+          >
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #postMenu="matMenu">
+            <button
+              mat-menu-item
+              [routerLink]="['/postagens', postagem.id]"
+              (click)="$event.stopPropagation()"
+            >
+              <mat-icon>visibility</mat-icon>
+              <span>Ver detalhes</span>
             </button>
-          </mat-form-field>
-          <button mat-raised-button color="primary" (click)="onSearch()">Buscar</button>
+            <button
+              mat-menu-item
+              [routerLink]="['/postagens/editar', postagem.id]"
+              (click)="$event.stopPropagation()"
+            >
+              <mat-icon>edit</mat-icon>
+              <span>Editar</span>
+            </button>
+            <button
+              mat-menu-item
+              [routerLink]="['/postagens/excluir', postagem.id]"
+              (click)="$event.stopPropagation()"
+            >
+              <mat-icon>delete</mat-icon>
+              <span>Excluir</span>
+            </button>
+          </mat-menu>
         </div>
-        
-        <div class="table-responsive">
-          <div *ngIf="loading" class="loading-container">
-            <mat-spinner></mat-spinner>
-          </div>
-          
-          <table mat-table [dataSource]="postagens" *ngIf="!loading">
-
-            <ng-container matColumnDef="titulo">
-              <th mat-header-cell *matHeaderCellDef>Título</th>
-              <td mat-cell *matCellDef="let postagem">{{ postagem.titulo }}</td>
-            </ng-container>
-            
-            <ng-container matColumnDef="autor">
-              <th mat-header-cell *matHeaderCellDef>Autor</th>
-              <td mat-cell *matCellDef="let postagem">{{ postagem.usuario.nome }}</td>
-            </ng-container>
-            
-            <ng-container matColumnDef="tema">
-              <th mat-header-cell *matHeaderCellDef>Tema</th>
-              <td mat-cell *matCellDef="let postagem">{{ postagem.tema.descricao }}</td>
-            </ng-container>
-            
-            <ng-container matColumnDef="data">
-              <th mat-header-cell *matHeaderCellDef>Data</th>
-              <td mat-cell *matCellDef="let postagem">{{ postagem.creationTimestamp | date:'dd/MM/yyyy HH:mm' }}</td>
-            </ng-container>
-            
-            <ng-container matColumnDef="acoes">
-              <th mat-header-cell *matHeaderCellDef>Ações</th>
-              <td mat-cell *matCellDef="let postagem">
-                <button mat-icon-button color="primary" [routerLink]="['/postagens', postagem.id]">
-                  <mat-icon>visibility</mat-icon>
-                </button>
-                <button mat-icon-button color="accent" [routerLink]="['/postagens/editar', postagem.id]">
-                  <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-icon-button color="warn" [routerLink]="['/postagens/excluir', postagem.id]">
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </td>
-            </ng-container>
-            
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-          </table>
-          
-          <div class="no-records" *ngIf="!loading && postagens.length === 0">
-            <p>Nenhuma postagem encontrada.</p>
-          </div>
-          
-          <mat-paginator
-            [length]="totalItems"
-            [pageSize]="pageSize"
-            [pageSizeOptions]="pageSizeOptions"
-            [pageIndex]="currentPage"
-            (page)="onPageChange($event)"
-            *ngIf="totalItems > 0">
-          </mat-paginator>
+      </div>
+      
+      <div class="post-content">
+        <h3 class="post-title">{{ postagem.titulo }}</h3>
+        <p class="post-text">{{ postagem.texto }}</p>
+      </div>
+      
+      <div class="post-details" *ngIf="isExpanded(postagem)">
+        <div class="post-data">
+          <mat-icon>access_time</mat-icon>
+          <span>{{ postagem.creationTimestamp | date: 'dd/MM/yyyy HH:mm' }}</span>
         </div>
-      </mat-card-content>
-    </mat-card>
+        <div class="post-tema">
+          <mat-icon>label</mat-icon>
+          <span>{{ postagem.tema.descricao }}</span>
+        </div>
+      </div>
+    </div>
   </div>
+  
+  <mat-paginator
+    [length]="totalItems"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"
+    [pageIndex]="currentPage"
+    (page)="onPageChange($event)"
+    *ngIf="totalItems > 0"
+  >
+  </mat-paginator>
+</div>
