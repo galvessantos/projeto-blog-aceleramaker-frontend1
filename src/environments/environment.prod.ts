@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'http://localhost:8080'
+    apiUrl: 'https://projeto-blog-aceleramaker-backend-production.up.railway.app'
   };
