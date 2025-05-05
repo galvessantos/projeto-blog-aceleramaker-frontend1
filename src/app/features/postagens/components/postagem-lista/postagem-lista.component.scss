@@ -1,24 +1,48 @@
 .page-container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 16px;
-}
-
-.header-actions {
   display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  margin-bottom: 16px;
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 0 0 20px;
+  padding: 16px;
+  position: relative;
 }
 
-.new-post-button {
+.main-content {
+  flex: 1;
+  max-width: 600px;
+}
+
+.navigation-header {
+  text-align: left;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  position: relative;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.feed-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+  padding-bottom: 8px;
+  color: #2d3748;
+}
+
+.active-indicator {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 80px;
+  height: 4px;
   background-color: #6a11cb;
+  border-radius: 4px 4px 0 0;
 }
 
 .search-container {
   display: flex;
   align-items: center;
   background-color: #f0f0f0;
+  background: #ffffff;
   border-radius: 24px;
   padding: 8px 16px;
   margin-bottom: 24px;
@@ -34,7 +58,7 @@
   flex: 1;
   border: none;
   outline: none;
-  background: transparent;
+  background: #ffffff;
   font-size: 15px;
   color: #2d3748;
 }
@@ -176,4 +200,84 @@
 mat-paginator {
   background-color: transparent;
   margin-top: 16px;
+}
+
+.new-post-button {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background-color: #6a11cb;
+  z-index: 100;
+}
+
+.trends-sidebar {
+  width: 300px;
+  position: sticky;
+  top: 16px;
+  align-self: flex-start;
+}
+
+.trends-container {
+  background-color: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(106, 17, 203, 0.1);
+}
+
+.trends-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  color: #2d3748;
+  border-bottom: 2px solid #6a11cb;
+  padding-bottom: 8px;
+}
+
+.trend-item {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.trend-item:last-child {
+  border-bottom: none;
+}
+
+.trend-item:hover {
+  background-color: rgba(106, 17, 203, 0.05);
+  border-radius: 8px;
+  padding: 12px 8px;
+  margin: 0 -8px;
+}
+
+.trend-category {
+  font-size: 12px;
+  color: #718096;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.trend-content {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #0f0f0fd3;
+}
+
+.trend-posts {
+  font-size: 12px;
+  color: #718096;
+}
+
+@media (max-width: 1024px) {
+  .trends-sidebar {
+    display: none;
+  }
+  
+  .page-container {
+    justify-content: center;
+    margin: 0 auto;
+  }
 }

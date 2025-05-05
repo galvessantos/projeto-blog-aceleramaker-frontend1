@@ -35,6 +35,7 @@ export class PostagemListaComponent implements OnInit {
   expandedPosts = new Set<number>();
   loading = false;
   searchTerm = '';
+  activeTab = 'para-voce';
   
   totalItems = 0;
   pageSize = 10;
@@ -49,30 +50,35 @@ export class PostagemListaComponent implements OnInit {
   ngOnInit(): void {
     this.loadPostagens();
   }
-  
-loadPostagens(): void {
-  this.loading = true;
-  this.postagemService.getAllPosts(this.currentPage, this.pageSize, this.searchTerm).subscribe({
-    next: (response) => {
-      this.postagens = response.content.map(post => {
-        if (post.usuario && post.usuario.foto) {
-          if (!post.usuario.foto.startsWith('http') && !post.usuario.foto.startsWith('data:')) {
-            post.usuario.foto = `${environment.apiUrl}/${post.usuario.foto}`;
+
+  loadPostagens(): void {
+    this.loading = true;
+    this.postagemService.getAllPosts(this.currentPage, this.pageSize, this.searchTerm).subscribe({
+      next: (response) => {
+        this.postagens = response.content.map(post => {
+          if (post.usuario && post.usuario.foto) {
+            if (!post.usuario.foto.startsWith('http') && !post.usuario.foto.startsWith('data:')) {
+              post.usuario.foto = `${environment.apiUrl}/${post.usuario.foto}`;
+            }
           }
-        }
-        return post;
-      });
-      this.totalItems = response.totalElements;
-      this.loading = false;
-    },
-    error: (error) => {
-      this.snackBar.open('Erro ao carregar postagens: ' + error.message, 'Fechar', {
-        duration: 5000
-      });
-      this.loading = false;
-    }
-  });
-}
+          return post;
+        });
+        this.totalItems = response.totalElements;
+        this.loading = false;
+      },
+      error: (error) => {
+        this.snackBar.open('Erro ao carregar postagens: ' + error.message, 'Fechar', {
+          duration: 5000
+        });
+        this.loading = false;
+      }
+    });
+  }
+  
+  setActiveTab(tab: string): void {
+    this.activeTab = tab;
+    this.loadPostagens();
+  }
   
   toggleExpanded(postagem: Postagem): void {
     const id = postagem.id;

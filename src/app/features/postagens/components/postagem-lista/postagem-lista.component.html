@@ -1,112 +1,153 @@
 <div class="page-container">
-  <div class="header-actions">
-    <button mat-fab color="primary" routerLink="/postagens/novo" class="new-post-button">
-      <mat-icon>add</mat-icon>
-    </button>
-  </div>
-  
-  <div class="search-container">
-    <mat-icon>search</mat-icon>
-    <input
-      type="text"
-      placeholder="Buscar postagens"
-      [(ngModel)]="searchTerm"
-      (keyup.enter)="onSearch()"
-    >
-    <button *ngIf="searchTerm" mat-icon-button (click)="clearSearch()">
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
-  
-  <div class="loading-container" *ngIf="loading">
-    <mat-spinner diameter="40"></mat-spinner>
-  </div>
-  
-  <div class="posts-container" *ngIf="!loading">
-    <div class="no-posts" *ngIf="postagens.length === 0">
-      <mat-icon>sentiment_dissatisfied</mat-icon>
-      <p>Nenhuma postagem encontrada.</p>
+  <div class="main-content">
+    <div class="navigation-header">
+      <h2 class="feed-title">Para você</h2>
+      <div class="active-indicator"></div>
+    </div>
+
+    <div class="search-container">
+      <mat-icon>search</mat-icon>
+      <input
+        type="text"
+        placeholder="Buscar postagens"
+        [(ngModel)]="searchTerm"
+        (keyup.enter)="onSearch()"
+      >
+      <button *ngIf="searchTerm" mat-icon-button (click)="clearSearch()">
+        <mat-icon>close</mat-icon>
+      </button>
     </div>
     
-    <div
-      class="post-card"
-      *ngFor="let postagem of postagens"
-      (click)="toggleExpanded(postagem)"
-      [class.expanded]="isExpanded(postagem)"
-    >
-      <div class="post-header">
-        <div class="user-avatar">
-          <img *ngIf="postagem.usuario?.foto" [src]="postagem.usuario.foto" alt="Foto de perfil" class="avatar-img">
-          <mat-icon *ngIf="!postagem.usuario?.foto">account_circle</mat-icon>
-        </div>
-        <div class="post-user-info">
-          <div class="user-name">{{ postagem.usuario.nome }}</div>
-          <div class="user-handle">
-            {{ '@' + (postagem.usuario.username || 'usuario') }}
+    <div class="loading-container" *ngIf="loading">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+    
+    <div class="posts-container" *ngIf="!loading">
+      <div class="no-posts" *ngIf="postagens.length === 0">
+        <mat-icon>sentiment_dissatisfied</mat-icon>
+        <p>Nenhuma postagem encontrada.</p>
+      </div>
+      
+      <div
+        class="post-card"
+        *ngFor="let postagem of postagens"
+        (click)="toggleExpanded(postagem)"
+        [class.expanded]="isExpanded(postagem)"
+      >
+        <div class="post-header">
+          <div class="user-avatar">
+            <img *ngIf="postagem.usuario?.foto" [src]="postagem.usuario.foto" alt="Foto de perfil" class="avatar-img">
+            <mat-icon *ngIf="!postagem.usuario?.foto">account_circle</mat-icon>
+          </div>
+          <div class="post-user-info">
+            <div class="user-name">{{ postagem.usuario.nome }}</div>
+            <div class="user-handle">
+              {{ '@' + (postagem.usuario.username || 'usuario') }}
+            </div>
+          </div>
+          <div class="post-actions">
+            <button
+              mat-icon-button
+              [matMenuTriggerFor]="postMenu"
+              (click)="$event.stopPropagation()"
+            >
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #postMenu="matMenu">
+              <button
+                mat-menu-item
+                [routerLink]="['/postagens', postagem.id]"
+                (click)="$event.stopPropagation()"
+              >
+                <mat-icon>visibility</mat-icon>
+                <span>Ver detalhes</span>
+              </button>
+              <button
+                mat-menu-item
+                [routerLink]="['/postagens/editar', postagem.id]"
+                (click)="$event.stopPropagation()"
+              >
+                <mat-icon>edit</mat-icon>
+                <span>Editar</span>
+              </button>
+              <button
+                mat-menu-item
+                [routerLink]="['/postagens/excluir', postagem.id]"
+                (click)="$event.stopPropagation()"
+              >
+                <mat-icon>delete</mat-icon>
+                <span>Excluir</span>
+              </button>
+            </mat-menu>
           </div>
         </div>
-        <div class="post-actions">
-          <button
-            mat-icon-button
-            [matMenuTriggerFor]="postMenu"
-            (click)="$event.stopPropagation()"
-          >
-            <mat-icon>more_vert</mat-icon>
-          </button>
-          <mat-menu #postMenu="matMenu">
-            <button
-              mat-menu-item
-              [routerLink]="['/postagens', postagem.id]"
-              (click)="$event.stopPropagation()"
-            >
-              <mat-icon>visibility</mat-icon>
-              <span>Ver detalhes</span>
-            </button>
-            <button
-              mat-menu-item
-              [routerLink]="['/postagens/editar', postagem.id]"
-              (click)="$event.stopPropagation()"
-            >
-              <mat-icon>edit</mat-icon>
-              <span>Editar</span>
-            </button>
-            <button
-              mat-menu-item
-              [routerLink]="['/postagens/excluir', postagem.id]"
-              (click)="$event.stopPropagation()"
-            >
-              <mat-icon>delete</mat-icon>
-              <span>Excluir</span>
-            </button>
-          </mat-menu>
+        
+        <div class="post-content">
+          <h3 class="post-title">{{ postagem.titulo }}</h3>
+          <p class="post-text">{{ postagem.texto }}</p>
         </div>
-      </div>
-      
-      <div class="post-content">
-        <h3 class="post-title">{{ postagem.titulo }}</h3>
-        <p class="post-text">{{ postagem.texto }}</p>
-      </div>
-      
-      <div class="post-details" *ngIf="isExpanded(postagem)">
-        <div class="post-data">
-          <mat-icon>access_time</mat-icon>
-          <span>{{ postagem.creationTimestamp | date: 'dd/MM/yyyy HH:mm' }}</span>
-        </div>
-        <div class="post-tema">
-          <mat-icon>label</mat-icon>
-          <span>{{ postagem.tema.descricao }}</span>
+        
+        <div class="post-details" *ngIf="isExpanded(postagem)">
+          <div class="post-data">
+            <mat-icon>access_time</mat-icon>
+            <span>{{ postagem.creationTimestamp | date: 'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+          <div class="post-tema">
+            <mat-icon>label</mat-icon>
+            <span>{{ postagem.tema.descricao }}</span>
+          </div>
         </div>
       </div>
     </div>
+    
+    <mat-paginator
+      [length]="totalItems"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      [pageIndex]="currentPage"
+      (page)="onPageChange($event)"
+      *ngIf="totalItems > 0"
+    >
+    </mat-paginator>
   </div>
-  
-  <mat-paginator
-    [length]="totalItems"
-    [pageSize]="pageSize"
-    [pageSizeOptions]="pageSizeOptions"
-    [pageIndex]="currentPage"
-    (page)="onPageChange($event)"
-    *ngIf="totalItems > 0"
-  >
-  </mat-paginator>
+
+  <div class="trends-sidebar">
+    <div class="trends-container">
+      <h2 class="trends-title">O que está acontecendo</h2>
+      
+      <div class="trend-item">
+        <div class="trend-category">Tecnologia · Assunto do Momento</div>
+        <div class="trend-content">Acelera Maker</div>
+        <div class="trend-posts">15,6 mil posts</div>
+      </div>
+      
+      <div class="trend-item">
+        <div class="trend-category">Desenvolvimento Web · Tendência</div>
+        <div class="trend-content">Blog Pessoal</div>
+        <div class="trend-posts">8,2 mil posts</div>
+      </div>
+      
+      <div class="trend-item">
+        <div class="trend-category">Programação · Popular</div>
+        <div class="trend-content">Gabriel Alves</div>
+        <div class="trend-posts">42,3 mil posts</div>
+      </div>
+      
+      <div class="trend-item">
+        <div class="trend-category">Esportes · Futebol</div>
+        <div class="trend-content">Corinthians</div>
+        <div class="trend-posts">67,8 mil posts</div>
+      </div>
+      
+      <div class="trend-item">
+        <div class="trend-category">Tecnologia · Angular</div>
+        <div class="trend-content">Twinterior</div>
+        <div class="trend-posts">23,4 mil posts</div>
+      </div>
+    </div>
+  </div>
+
+  <button mat-fab color="primary" routerLink="/postagens/novo" class="new-post-button">
+    <mat-icon>add</mat-icon>
+  </button>
 </div>
