@@ -1,13 +1,19 @@
 {
+  "version": 2,
+  "public": true,
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/(.*)",
+      "destination": "/browser/index.html"
+    }
   ],
   "builds": [
     {
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist/blog-pessoal"
+        "distDir": "dist/blog-pessoal",
+        "buildCommand": "ng build"
       }
     }
   ]
