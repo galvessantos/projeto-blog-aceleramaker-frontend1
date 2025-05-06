@@ -2,8 +2,6 @@
 
 **Twinterior Blog** é uma aplicação full-stack moderna inspirada no formato de Blog da famosa rede social Twitter. Desenvolvida com **Angular**, focando em arquitetura escalável, componentes standalone e uma interface intuitiva baseada no Angular Material. O projeto visa boas práticas de desenvolvimento, responsividade e experiência do usuário.
 
----
-
 ## 📐 Arquitetura & Estrutura
 
 O projeto segue uma **arquitetura baseada em features**, separando responsabilidades de forma clara entre serviços, componentes e módulos. Principais funcionalidades:
@@ -14,8 +12,6 @@ O projeto segue uma **arquitetura baseada em features**, separando responsabilid
 - Gerenciamento de perfil do usuário  
 - Dashboard com estatísticas e gráficos  
 
----
-
 ## 🛠️ Stack Tecnológica
 
 - **Framework Frontend**: Angular 16+ com *Standalone Components*  
@@ -24,8 +20,6 @@ O projeto segue uma **arquitetura baseada em features**, separando responsabilid
 - **Estilização**: SCSS com design responsivo  
 - **Comunicação HTTP**: Angular `HttpClient` com interceptadores  
 - **Roteamento**: Angular Router com *lazy loading*  
-
----
 
 ## 🔑 Funcionalidades Principais
 
@@ -37,8 +31,6 @@ O projeto segue uma **arquitetura baseada em features**, separando responsabilid
 - **Tratamento de Erros**: Feedbacks amigáveis e sistema robusto de captura de erros  
 - **Navegação Intuitiva**: Layout principal com navegação lateral  
 
----
-
 ## 📁 Organização do Projeto
 
 - `core/`: Serviços globais, guards, interceptadores, modelos e layouts  
@@ -46,8 +38,6 @@ O projeto segue uma **arquitetura baseada em features**, separando responsabilid
 - `shared/`: Componentes reutilizáveis e utilitários  
 - `assets/`: Imagens e recursos estáticos  
 - `environments/`: Configurações para diferentes ambientes (dev/prod)  
-
----
 
 ## 🚀 Deploy
 
@@ -73,8 +63,6 @@ O Twinterior Blog está implantado em ambientes de produção, pronto para ser a
 
 ````
 
----
-
 ## ▶️ Como Executar Localmente
 
 Clone o repositório e instale as dependências:
@@ -87,8 +75,6 @@ ng serve
 ````
 
 Abra o navegador e acesse: `http://localhost:4200`
-
----
 
 ## 👤 Autor
 
