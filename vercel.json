@@ -1,11 +1,14 @@
 {
-    "builds": [
-      {
-        "src": "package.json",
-        "use": "@vercel/node",
-        "config": {
-          "buildCommand": "ng build"
-        }
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist/[blog-pessoal]"
       }
-    ]
-  }
+    }
+  ]
+}
