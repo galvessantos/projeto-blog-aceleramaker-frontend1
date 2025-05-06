@@ -1,35 +1,39 @@
-# 💬 Twinterior Blog
+<h1 align="center">🔁 Twinterior Blog</h1>
+<p align="center">Uma experiência de blogging moderna, híbrida e responsiva com Angular</p>
 
-**Twinterior Blog** é uma aplicação full-stack moderna inspirada no formato de Blog da famosa rede social Twitter. Desenvolvida com **Angular**, focando em arquitetura escalável, componentes standalone e uma interface intuitiva baseada no Angular Material. O projeto visa boas práticas de desenvolvimento, responsividade e experiência do usuário.
+<p align="center">
+  <img src="https://img.shields.io/badge/Angular-16-DD0031?style=flat&logo=angular" />
+  <img src="https://img.shields.io/badge/TypeScript-Strict-blue?style=flat&logo=typescript" />
+  <img src="https://img.shields.io/badge/SCSS-Styled-informational?style=flat&logo=sass" />
+  <img src="https://img.shields.io/badge/Vercel-Deploy-black?style=flat&logo=vercel" />
+</p>
 
-## 📐 Arquitetura & Estrutura
+---
 
-O projeto segue uma **arquitetura baseada em features**, separando responsabilidades de forma clara entre serviços, componentes e módulos. Principais funcionalidades:
+## 🎥 Demonstração
 
-- Autenticação com login e registro  
-- CRUD de posts (criar, ler, atualizar, deletar)  
-- Organização por temas/categorias  
-- Gerenciamento de perfil do usuário  
-- Dashboard com estatísticas e gráficos  
+https://github.com/user-attachments/assets/ec8674d0-e89e-4368-b63d-f7e077732107
 
-## 🛠️ Stack Tecnológica
+---
 
-- **Framework Frontend**: Angular 16+ com *Standalone Components*  
-- **UI Components**: Angular Material  
-- **Gerenciamento de Estado**: Abordagem reativa com Services e Observables  
-- **Estilização**: SCSS com design responsivo  
-- **Comunicação HTTP**: Angular `HttpClient` com interceptadores  
-- **Roteamento**: Angular Router com *lazy loading*  
+## 🚀 Sobre o Projeto
 
-## 🔑 Funcionalidades Principais
+Twinterior Blog é uma plataforma de blog pessoal desenvolvida com Angular e Spring Boot como backend. O projeto utiliza uma abordagem híbrida combinando componentes standalone com o CoreModule para serviços essenciais, oferecendo o melhor dos dois mundos em termos de modularidade e reutilização.
 
-- **Autenticação JWT**: Sistema seguro com gerenciamento de tokens e guards de rota  
-- **Design Responsivo**: UI adaptável a dispositivos móveis e telas variadas  
-- **Material Design**: Componentes consistentes e acessíveis com Angular Material  
-- **Formulários Reativos**: Validações completas com Reactive Forms  
-- **Visualização de Dados**: Gráficos no dashboard utilizando Chart.js  
-- **Tratamento de Erros**: Feedbacks amigáveis e sistema robusto de captura de erros  
-- **Navegação Intuitiva**: Layout principal com navegação lateral  
+---
+
+## 📦 Tecnologias Utilizadas
+
+- [Angular 16+](https://angular.io/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [SCSS](https://sass-lang.com/)
+- [RxJS](https://rxjs.dev/)
+- [Chart.js](https://www.chartjs.org/)
+- [Vercel (deploy frontend)](https://vercel.com/)
+- [Railway (deploy backend)](https://railway.app/)
+
+---
+
 
 ## 📁 Organização do Projeto
 
@@ -39,20 +43,72 @@ O projeto segue uma **arquitetura baseada em features**, separando responsabilid
 - `assets/`: Imagens e recursos estáticos  
 - `environments/`: Configurações para diferentes ambientes (dev/prod)  
 
-## 🚀 Deploy
 
-O Twinterior Blog está implantado em ambientes de produção, pronto para ser acessado de qualquer lugar:
+---
 
-- 🌐 **Frontend (Angular)**: [https://twinterior.vercel.app](https://projeto-blog-aceleramaker-frontend1.vercel.app)  
-  — Hospedado na **Vercel**, com deploy automático via GitHub e previews por branch.
+## 🔐 Autenticação
 
-- 🔗 **Backend (API REST)**: [https://twinterior-api.up.railway.app](projeto-blog-aceleramaker-backend-production.up.railway.app)  
-  — Implantado na **Railway**, com CI/CD, logs em tempo real e gerenciamento de banco de dados MySQL.
+* Login e registro com persistência via LocalStorage
+* Redirecionamento automático após login
+* Proteção de rotas com `authGuardFn`
+* Interceptador que injeta o token JWT nas requisições HTTP
 
-### 🧩 Diagrama Simplificado
+---
 
+## 📊 Dashboard de Métricas
+
+* Visualização da quantidade de postagens por autor
+* Gráficos interativos com Chart.js
+* Monitoramento do total de postagens
+* Listagem de publicações recentes
+* Filtros avançados para análise personalizada
+
+---
+
+## ⚙️ Instalação Local
+
+```bash
+# Clone o repositório
+git clone https://github.com/galvessantos/projeto-blog-aceleramaker-frontend1.git
+cd projeto-blog-aceleramaker-frontend1
+
+# Instale as dependências
+npm install
+
+# Configure o endpoint da API
+# edite o arquivo: src/environments/environment.ts
+
+export const environment = {
+  production: false,
+  api: 'http://localhost:8080'
+};
+
+# Inicie o servidor local
+ng start
 ```
 
+---
+
+## 🧠 Arquitetura Adotada
+
+* ✅ Abordagem híbrida com CoreModule para serviços globais e componentes standalone para features
+* ✅ CoreModule centraliza interceptadores HTTP, serviços de autenticação e configurações essenciais
+* ✅ Componentes standalone facilitam a manutenção e reduzem a necessidade de módulos adicionais
+* ✅ Implementação do padrão de serviços com injeção providedIn: 'root'
+* ✅ Design System consistente com Angular Material personalizado via SCSS
+
+---
+
+## 🌐 Deploy
+
+A aplicação está hospedada nos seguintes links:
+
+* 🌐 **Frontend (Vercel)**: [https://twinterior.vercel.app](https://projeto-blog-aceleramaker-frontend1.vercel.app)
+* 🛠 **Backend (Railway)**: [twinterior-api.up.railway.app](https://twinterior-api.up.railway.app)
+
+  #### Diagrama Simplificado
+
+```
 \[ Usuário ]
       ↓
 \[ Frontend - Angular (Vercel) ]
@@ -60,23 +116,12 @@ O Twinterior Blog está implantado em ambientes de produção, pronto para ser a
 \[ Backend - API REST (Railway) ]
       ↓
 \[ Banco de Dados - MySQL (Railway) ]
-
 ````
 
-## ▶️ Como Executar Localmente
-
-Clone o repositório e instale as dependências:
-
-```bash
-git clone https://github.com/galvessantos/projeto-blog-aceleramaker-frontend1.git
-cd projeto-blog-aceleramaker-frontend1
-npm install
-ng serve
-````
-
-Abra o navegador e acesse: `http://localhost:4200`
+---
 
 ## 👤 Autor
 
 Desenvolvido por Gabriel Alves  
 Bootcamp Acelera Maker – Montreal
+
