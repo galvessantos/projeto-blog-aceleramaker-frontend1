@@ -3,8 +3,8 @@
   "public": true,
   "rewrites": [
     {
-      "source": "/((?!.*\\..*).*)", 
-      "destination": "/browser/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
   "builds": [
@@ -12,29 +12,9 @@
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist/blog-pessoal",
+        "distDir": "dist/blog-pessoal/browser",
         "buildCommand": "ng build"
       }
-    }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)\\.js$",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/javascript"
-        }
-      ]
-    },
-    {
-      "source": "/(.*)\\.css$",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/css"
-        }
-      ]
     }
   ]
 }
