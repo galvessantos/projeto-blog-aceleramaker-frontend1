@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -9,6 +9,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Subscription } from 'rxjs';
 
 import { AuthService } from '../../services/auth.service';
 
@@ -29,9 +30,10 @@ import { AuthService } from '../../services/auth.service';
     MatDividerModule
   ]
 })
-export class MainLayoutComponent implements OnInit {
+export class MainLayoutComponent implements OnInit, OnDestroy {
   @ViewChild('sidenav') sidenav!: MatSidenav;
   isLargeScreen = true;
+  private breakpointSubscription!: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -39,13 +41,17 @@ export class MainLayoutComponent implements OnInit {
   ) {}
   
   ngOnInit(): void {
-    this.breakpointObserver.observe([
-      Breakpoints.XSmall,
-      Breakpoints.Small,
-      Breakpoints.Medium
-    ]).subscribe(result => {
-      this.isLargeScreen = !(result.matches);
-    });
+    this.breakpointSubscription = this.breakpointObserver
+      .observe([Breakpoints.XSmall, Breakpoints.Small])
+      .subscribe(result => {
+        this.isLargeScreen = !result.matches;
+      });
+  }
+  
+  ngOnDestroy(): void {
+    if (this.breakpointSubscription) {
+      this.breakpointSubscription.unsubscribe();
+    }
   }
   
   get userName(): string {

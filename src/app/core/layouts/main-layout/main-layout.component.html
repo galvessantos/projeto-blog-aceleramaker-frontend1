@@ -1,6 +1,6 @@
 <div class="app-container">
   <mat-toolbar color="primary" class="app-toolbar">
-    <button mat-icon-button (click)="sidenav.toggle()">
+    <button mat-icon-button (click)="sidenav.toggle()" class="menu-button" *ngIf="!isLargeScreen">
       <mat-icon>menu</mat-icon>
     </button>
     
@@ -31,7 +31,9 @@
   </mat-toolbar>
 
   <mat-sidenav-container class="sidenav-container">
-    <mat-sidenav #sidenav mode="over" [opened]="isLargeScreen" class="sidenav">
+    <mat-sidenav #sidenav [mode]="isLargeScreen ? 'side' : 'over'" 
+                 [opened]="isLargeScreen" 
+                 class="sidenav">
       <div class="sidenav-content">
         <mat-nav-list>
           <a mat-list-item routerLink="/postagens" routerLinkActive="active-link" class="nav-item" (click)="onNavItemClick()">
@@ -63,7 +65,7 @@
       </div>
     </mat-sidenav>
     
-    <mat-sidenav-content class="sidenav-content-container">
+    <mat-sidenav-content [class.sidenav-content-container-large]="isLargeScreen" class="sidenav-content-container">
       <div class="main-content">
         <router-outlet></router-outlet>
       </div>
