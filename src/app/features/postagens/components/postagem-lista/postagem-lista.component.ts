@@ -215,37 +215,46 @@ export class PostagemListaComponent implements OnInit {
   }
   
   isOwner(postagem: Postagem): boolean {
-    const currentId = this.authService.getUserId();
-    if (currentId !== this.currentUserId) {
-      this.currentUserId = currentId;
-    }
+    console.log('🔍 === DEBUG isOwner COMPLETO ===');
     
-    if (!postagem || !postagem.usuario || this.currentUserId === 0) {
-      console.log('isOwner - Dados insuficientes:', {
-        postagem: !!postagem,
-        usuario: !!postagem?.usuario,
-        currentUserId: this.currentUserId
-      });
+
+    if (!postagem) {
+      console.log('❌ Sem postagem');
       return false;
     }
     
+
+    if (!postagem.usuario) {
+      console.log('❌ Sem usuário na postagem');
+      return false;
+    }
+    
+
+    console.log('📋 Dados da postagem:');
+    console.log('  - ID da postagem:', postagem.id);
+    console.log('  - ID do usuário da postagem:', postagem.usuario.id);
+    console.log('  - Nome do usuário da postagem:', postagem.usuario.nome);
+    console.log('  - Username da postagem:', postagem.usuario.username);
+    
+
+    const meuId = this.authService.getUserId();
+    console.log('👤 Meu ID atual:', meuId);
+    
+
     const postagemUserId = Number(postagem.usuario.id);
-    const currentUserId = Number(this.currentUserId);
+    const currentUserId = Number(meuId);
     
-    const isOwnerResult = !isNaN(postagemUserId) && 
-                          !isNaN(currentUserId) && 
-                          postagemUserId === currentUserId;
+    console.log('🔢 Comparação de números:');
+    console.log('  - ID da postagem (number):', postagemUserId);
+    console.log('  - Meu ID (number):', currentUserId);
+    console.log('  - São iguais?', postagemUserId === currentUserId);
+    console.log('  - Meu ID > 0?', currentUserId > 0);
     
-    console.log('isOwner - Verificação de propriedade:', {
-      postagemId: postagem.id,
-      postagemUsuarioId: postagem.usuario.id,
-      postagemUsuarioNome: postagem.usuario.nome,
-      currentUserId: this.currentUserId,
-      convertedPostagemId: postagemUserId,
-      convertedCurrentId: currentUserId,
-      isOwner: isOwnerResult
-    });
+    const resultado = postagemUserId === currentUserId && currentUserId > 0;
     
-    return isOwnerResult;
+    console.log('✅ RESULTADO FINAL:', resultado);
+    console.log('===============================');
+    
+    return resultado;
   }
 }
