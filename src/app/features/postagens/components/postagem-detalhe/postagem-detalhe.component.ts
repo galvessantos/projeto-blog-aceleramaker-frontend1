@@ -9,6 +9,7 @@ import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 
 import { Postagem } from '../../../../core/models/postagem.model';
 import { PostagemService } from '../../../../core/services/postagem.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-postagem-detalhe',
@@ -28,12 +29,16 @@ import { PostagemService } from '../../../../core/services/postagem.service';
 export class PostagemDetalheComponent implements OnInit {
   postagem: Postagem | null = null;
   loading = false;
+  currentUserId: number = 0;
 
   constructor(
     private route: ActivatedRoute,
     private postagemService: PostagemService,
+    private authService: AuthService,
     private snackBar: MatSnackBar
-  ) {}
+  ) {
+    this.currentUserId = this.authService.getUserId();
+  }
 
   ngOnInit(): void {
     this.loading = true;
@@ -53,5 +58,9 @@ export class PostagemDetalheComponent implements OnInit {
         }
       });
     }
+  }
+  
+  isOwner(): boolean {
+    return this.postagem ? this.postagem.usuario.id === this.currentUserId : false;
   }
 }

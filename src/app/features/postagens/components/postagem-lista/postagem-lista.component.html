@@ -101,32 +101,34 @@
             >
               <mat-icon>more_vert</mat-icon>
             </button>
-            <mat-menu #postMenu="matMenu">
-              <button
-                mat-menu-item
-                [routerLink]="['/postagens', postagem.id]"
-                (click)="$event.stopPropagation()"
-              >
-                <mat-icon>visibility</mat-icon>
-                <span>Ver detalhes</span>
-              </button>
-              <button
-                mat-menu-item
-                [routerLink]="['/postagens/editar', postagem.id]"
-                (click)="$event.stopPropagation()"
-              >
-                <mat-icon>edit</mat-icon>
-                <span>Editar</span>
-              </button>
-              <button
-                mat-menu-item
-                [routerLink]="['/postagens/excluir', postagem.id]"
-                (click)="$event.stopPropagation()"
-              >
-                <mat-icon>delete</mat-icon>
-                <span>Excluir</span>
-              </button>
-            </mat-menu>
+<mat-menu #postMenu="matMenu">
+  <button
+    mat-menu-item
+    [routerLink]="['/postagens', postagem.id]"
+    (click)="$event.stopPropagation()"
+  >
+    <mat-icon>visibility</mat-icon>
+    <span>Ver detalhes</span>
+  </button>
+  <button
+    mat-menu-item
+    [routerLink]="['/postagens/editar', postagem.id]"
+    (click)="$event.stopPropagation()"
+    *ngIf="isOwner(postagem)"
+  >
+    <mat-icon>edit</mat-icon>
+    <span>Editar</span>
+  </button>
+  <button
+    mat-menu-item
+    [routerLink]="['/postagens/excluir', postagem.id]"
+    (click)="$event.stopPropagation()"
+    *ngIf="isOwner(postagem)"
+  >
+    <mat-icon>delete</mat-icon>
+    <span>Excluir</span>
+  </button>
+</mat-menu>
           </div>
         </div>
         

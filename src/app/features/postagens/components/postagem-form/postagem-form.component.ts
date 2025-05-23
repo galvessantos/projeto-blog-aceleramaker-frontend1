@@ -103,6 +103,16 @@ export class PostagemFormComponent implements OnInit {
       this.postagemService.getPostById(+id).subscribe({
         next: (postagem) => {
           console.log('Postagem carregada para edição:', postagem);
+          
+          if (postagem.usuario.id !== this.currentUserId) {
+            console.error('Usuário não autorizado a editar esta postagem');
+            this.snackBar.open('Você não tem permissão para editar esta postagem.', 'Fechar', {
+              duration: 5000
+            });
+            this.router.navigate(['/postagens']);
+            return;
+          }
+          
           this.postagemForm.patchValue({
             titulo: postagem.titulo,
             texto: postagem.texto,

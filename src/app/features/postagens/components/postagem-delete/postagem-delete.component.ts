@@ -10,6 +10,7 @@ import { MatDividerModule } from '@angular/material/divider';
 
 import { Postagem } from '../../../../core/models/postagem.model';
 import { PostagemService } from '../../../../core/services/postagem.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-postagem-delete',
@@ -31,13 +32,17 @@ export class PostagemDeleteComponent implements OnInit {
   postagem: Postagem | null = null;
   loading = false;
   deleting = false;
+  currentUserId: number = 0;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private postagemService: PostagemService,
+    private authService: AuthService,
     private snackBar: MatSnackBar
-  ) {}
+  ) {
+    this.currentUserId = this.authService.getUserId();
+  }
 
   ngOnInit(): void {
     this.loading = true;
@@ -47,6 +52,15 @@ export class PostagemDeleteComponent implements OnInit {
       this.postagemService.getPostById(+id).subscribe({
         next: (data) => {
           this.postagem = data;
+          
+          if (data.usuario.id !== this.currentUserId) {
+            this.snackBar.open('Você não tem permissão para excluir esta postagem.', 'Fechar', {
+              duration: 5000
+            });
+            this.router.navigate(['/postagens']);
+            return;
+          }
+          
           this.loading = false;
         },
         error: (error) => {

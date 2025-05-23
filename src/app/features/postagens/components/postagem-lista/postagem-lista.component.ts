@@ -19,6 +19,7 @@ import { environment } from '../../../../../environments/environment';
 import { Postagem } from '../../../../core/models/postagem.model';
 import { PostagemService } from '../../../../core/services/postagem.service';
 import { TemaService } from '../../../../core/services/tema.service';
+import { AuthService } from '../../../../core/services/auth.service';
 import { Tema } from '../../../../core/models/tema.model';
 
 @Component({
@@ -67,6 +68,7 @@ export class PostagemListaComponent implements OnInit {
   startDate: Date | null = null;
   endDate: Date | null = null;
   temas: Tema[] = [];
+  currentUserId: number = 0;
   
   totalItems = 0;
   pageSize = 10;
@@ -76,8 +78,11 @@ export class PostagemListaComponent implements OnInit {
   constructor(
     private postagemService: PostagemService,
     private temaService: TemaService,
+    private authService: AuthService,
     private snackBar: MatSnackBar
-  ) {}
+  ) {
+    this.currentUserId = this.authService.getUserId();
+  }
   
   ngOnInit(): void {
     this.loadPostagens();
@@ -192,5 +197,9 @@ export class PostagemListaComponent implements OnInit {
     this.searchTerm = '';
     this.currentPage = 0;
     this.loadPostagens();
+  }
+  
+  isOwner(postagem: Postagem): boolean {
+    return postagem.usuario.id === this.currentUserId;
   }
 }
