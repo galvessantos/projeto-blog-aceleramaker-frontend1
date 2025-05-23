@@ -80,20 +80,20 @@ export class PostagemListaComponent implements OnInit {
     private temaService: TemaService,
     private authService: AuthService,
     private snackBar: MatSnackBar
-  ) {
-    this.currentUserId = this.authService.getUserId();
-  }
+  ) {}
   
   ngOnInit(): void {
-    this.currentUserId = this.authService.getUserId();
-    console.log('PostagemListaComponent - ID do usuário atual:', this.currentUserId);
-    
-    if (this.currentUserId === 0) {
-      setTimeout(() => {
-        this.currentUserId = this.authService.getUserId();
-        console.log('PostagemListaComponent - ID do usuário atual (segunda tentativa):', this.currentUserId);
-      }, 100);
-    }
+    setTimeout(() => {
+      this.currentUserId = this.authService.getUserId();
+      console.log('PostagemListaComponent - ID do usuário obtido:', this.currentUserId);
+      
+      if (this.currentUserId === 0) {
+        setTimeout(() => {
+          this.currentUserId = this.authService.getUserId();
+          console.log('PostagemListaComponent - Segunda tentativa de obter ID:', this.currentUserId);
+        }, 500);
+      }
+    }, 100);
     
     this.loadPostagens();
     this.loadTemas();
@@ -135,6 +135,11 @@ export class PostagemListaComponent implements OnInit {
         });
         this.totalItems = response.totalElements;
         this.loading = false;
+        
+        if (this.currentUserId === 0) {
+          this.currentUserId = this.authService.getUserId();
+          console.log('PostagemListaComponent - ID atualizado após carregar postagens:', this.currentUserId);
+        }
       },
       error: (error) => {
         this.snackBar.open('Erro ao carregar postagens: ' + error.message, 'Fechar', {
@@ -210,21 +215,35 @@ export class PostagemListaComponent implements OnInit {
   }
   
   isOwner(postagem: Postagem): boolean {
+    const currentId = this.authService.getUserId();
+    if (currentId !== this.currentUserId) {
+      this.currentUserId = currentId;
+    }
+    
+    if (!postagem || !postagem.usuario || this.currentUserId === 0) {
+      console.log('isOwner - Dados insuficientes:', {
+        postagem: !!postagem,
+        usuario: !!postagem?.usuario,
+        currentUserId: this.currentUserId
+      });
+      return false;
+    }
+    
     const postagemUserId = Number(postagem.usuario.id);
     const currentUserId = Number(this.currentUserId);
     
     const isOwnerResult = !isNaN(postagemUserId) && 
-                           !isNaN(currentUserId) && 
-                           postagemUserId === currentUserId;
+                          !isNaN(currentUserId) && 
+                          postagemUserId === currentUserId;
     
-    console.log('Verificando propriedade da postagem:', {
+    console.log('isOwner - Verificação de propriedade:', {
       postagemId: postagem.id,
       postagemUsuarioId: postagem.usuario.id,
+      postagemUsuarioNome: postagem.usuario.nome,
       currentUserId: this.currentUserId,
       convertedPostagemId: postagemUserId,
       convertedCurrentId: currentUserId,
-      isOwner: isOwnerResult,
-      postagemUsuarioNome: postagem.usuario.nome
+      isOwner: isOwnerResult
     });
     
     return isOwnerResult;
