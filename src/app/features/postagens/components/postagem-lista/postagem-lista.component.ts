@@ -210,14 +210,23 @@ export class PostagemListaComponent implements OnInit {
   }
   
   isOwner(postagem: Postagem): boolean {
-    const isOwnerResult = postagem.usuario.id === this.currentUserId;
+    const postagemUserId = Number(postagem.usuario.id);
+    const currentUserId = Number(this.currentUserId);
+    
+    const isOwnerResult = !isNaN(postagemUserId) && 
+                           !isNaN(currentUserId) && 
+                           postagemUserId === currentUserId;
+    
     console.log('Verificando propriedade da postagem:', {
       postagemId: postagem.id,
       postagemUsuarioId: postagem.usuario.id,
       currentUserId: this.currentUserId,
+      convertedPostagemId: postagemUserId,
+      convertedCurrentId: currentUserId,
       isOwner: isOwnerResult,
       postagemUsuarioNome: postagem.usuario.nome
     });
+    
     return isOwnerResult;
   }
 }

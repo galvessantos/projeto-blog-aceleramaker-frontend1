@@ -71,11 +71,22 @@ export class PostagemDetalheComponent implements OnInit {
   }
   
   isOwner(): boolean {
-    const result = this.postagem ? this.postagem.usuario.id === this.currentUserId : false;
+    if (!this.postagem) return false;
+    
+    const postagemUserId = Number(this.postagem.usuario.id);
+    const currentUserId = Number(this.currentUserId);
+    
+    const result = !isNaN(postagemUserId) && 
+                   !isNaN(currentUserId) && 
+                   postagemUserId === currentUserId;
+                   
     console.log('PostagemDetalheComponent - isOwner:', result, {
-      postagemUsuarioId: this.postagem?.usuario.id,
-      currentUserId: this.currentUserId
+      postagemUsuarioId: this.postagem.usuario.id,
+      currentUserId: this.currentUserId,
+      convertedPostagemId: postagemUserId,
+      convertedCurrentId: currentUserId
     });
+    
     return result;
   }
 }
