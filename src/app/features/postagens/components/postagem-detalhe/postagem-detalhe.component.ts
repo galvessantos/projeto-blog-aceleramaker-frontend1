@@ -42,12 +42,22 @@ export class PostagemDetalheComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
+    this.currentUserId = this.authService.getUserId();
+    console.log('PostagemDetalheComponent - ID do usuário atual:', this.currentUserId);
+    
     const id = this.route.snapshot.paramMap.get('id');
     
     if (id) {
       this.postagemService.getPostById(+id).subscribe({
         next: (data) => {
           this.postagem = data;
+          console.log('Postagem carregada:', {
+            id: data.id,
+            usuarioId: data.usuario.id,
+            usuarioNome: data.usuario.nome,
+            currentUserId: this.currentUserId,
+            isOwner: this.isOwner()
+          });
           this.loading = false;
         },
         error: (error) => {
@@ -61,6 +71,11 @@ export class PostagemDetalheComponent implements OnInit {
   }
   
   isOwner(): boolean {
-    return this.postagem ? this.postagem.usuario.id === this.currentUserId : false;
+    const result = this.postagem ? this.postagem.usuario.id === this.currentUserId : false;
+    console.log('PostagemDetalheComponent - isOwner:', result, {
+      postagemUsuarioId: this.postagem?.usuario.id,
+      currentUserId: this.currentUserId
+    });
+    return result;
   }
 }

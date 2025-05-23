@@ -6,6 +6,11 @@ export interface Usuario {
   foto?: string;
 }
 
+export interface UsuarioCompleto extends Usuario {
+  creationTimestamp?: string;
+  updateTimestamp?: string;
+}
+
 export interface LoginRequest {
   login: string;
   senha: string;

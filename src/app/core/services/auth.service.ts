@@ -24,12 +24,39 @@ export class AuthService {
   }
   
   login(credentials: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.baseUrl}/auth/login`, credentials)
+    return this.http.post<any>(`${this.baseUrl}/auth/login`, credentials)
       .pipe(
         tap(response => {
+          console.log('Resposta do login:', response);
+          
           localStorage.setItem('token', response.token);
-          localStorage.setItem('user', JSON.stringify(response.usuario));
-          this.currentUserSubject.next(response.usuario);
+          
+          if (response.usuario) {
+            localStorage.setItem('user', JSON.stringify(response.usuario));
+            this.currentUserSubject.next(response.usuario);
+          } else {
+
+            try {
+              const parts = response.token.split('.');
+              if (parts.length === 3) {
+                const payload = JSON.parse(atob(parts[1]));
+                console.log('Payload do token:', payload);
+                
+                const usuario: Usuario = {
+                  id: payload.userId || payload.id || 0,
+                  username: payload.sub || payload.username || credentials.login,
+                  email: payload.email || '',
+                  nome: payload.nome || payload.name || credentials.login,
+                  foto: payload.foto || ''
+                };
+                
+                localStorage.setItem('user', JSON.stringify(usuario));
+                this.currentUserSubject.next(usuario);
+              }
+            } catch (error) {
+              console.error('Erro ao processar token:', error);
+            }
+          }
         })
       );
   }
@@ -83,13 +110,19 @@ export class AuthService {
           const payload = atob(parts[1]);
           const decodedPayload = JSON.parse(payload);
           
-          if (decodedPayload.userId !== undefined && decodedPayload.userId !== null) {
-            const userId = Number(decodedPayload.userId);
-            if (!isNaN(userId)) {
-              console.log('ID do usuário extraído do token:', userId);
-              return userId;
+          const possibleIdFields = ['userId', 'id', 'sub', 'user_id'];
+          
+          for (const field of possibleIdFields) {
+            if (decodedPayload[field] !== undefined && decodedPayload[field] !== null) {
+              const userId = Number(decodedPayload[field]);
+              if (!isNaN(userId)) {
+                console.log(`ID do usuário extraído do token (campo ${field}):`, userId);
+                return userId;
+              }
             }
           }
+          
+          console.log('Payload do token:', decodedPayload);
         }
       } catch (error) {
         console.error('Erro ao decodificar token:', error);

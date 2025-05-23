@@ -85,6 +85,16 @@ export class PostagemListaComponent implements OnInit {
   }
   
   ngOnInit(): void {
+    this.currentUserId = this.authService.getUserId();
+    console.log('PostagemListaComponent - ID do usuário atual:', this.currentUserId);
+    
+    if (this.currentUserId === 0) {
+      setTimeout(() => {
+        this.currentUserId = this.authService.getUserId();
+        console.log('PostagemListaComponent - ID do usuário atual (segunda tentativa):', this.currentUserId);
+      }, 100);
+    }
+    
     this.loadPostagens();
     this.loadTemas();
   }
@@ -200,6 +210,14 @@ export class PostagemListaComponent implements OnInit {
   }
   
   isOwner(postagem: Postagem): boolean {
-    return postagem.usuario.id === this.currentUserId;
+    const isOwnerResult = postagem.usuario.id === this.currentUserId;
+    console.log('Verificando propriedade da postagem:', {
+      postagemId: postagem.id,
+      postagemUsuarioId: postagem.usuario.id,
+      currentUserId: this.currentUserId,
+      isOwner: isOwnerResult,
+      postagemUsuarioNome: postagem.usuario.nome
+    });
+    return isOwnerResult;
   }
 }

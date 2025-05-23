@@ -41,6 +41,17 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   ) {}
   
   ngOnInit(): void {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser || !currentUser.id) {
+      console.log('MainLayout - Dados do usuário não encontrados');
+      const token = this.authService.getToken();
+      if (token) {
+        console.log('MainLayout - Token disponível, mas dados do usuário ausentes');
+      }
+    } else {
+      console.log('MainLayout - Usuário carregado:', currentUser);
+    }
+    
     this.breakpointSubscription = this.breakpointObserver
       .observe([Breakpoints.XSmall, Breakpoints.Small])
       .subscribe(result => {

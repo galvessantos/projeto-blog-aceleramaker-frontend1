@@ -32,10 +32,26 @@ export class UsuarioService {
     if (userId && userId > 0) {
       return this.http.get<Usuario>(`${this.apiUrl}/${userId}`)
         .pipe(
+          tap(usuario => {
+            this.authService.updateCurrentUser(usuario);
+          }),
           catchError(error => throwError(() => new Error('Não foi possível carregar o perfil. ' + error.message)))
         );
     }
     return throwError(() => new Error('Usuário não autenticado ou ID inválido'));
+  }
+
+  getUsuarioAtual(): Observable<Usuario> {
+    return this.http.get<Usuario>(`${this.apiUrl}/me`)
+      .pipe(
+        tap(usuario => {
+          this.authService.updateCurrentUser(usuario);
+        }),
+        catchError(error => {
+          console.error('Erro ao buscar usuário atual:', error);
+          return throwError(() => error);
+        })
+      );
   }
 
   atualizarPerfil(formData: FormData): Observable<Usuario> {
